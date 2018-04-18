@@ -1,4 +1,4 @@
-package com.goetboy.entity;
+package pers.goetboy.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
@@ -83,5 +83,17 @@ public abstract class AbstractEntity {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    @Override
+    public String toString() {
+        return "AbstractEntity{" +
+                "id=" + id +
+                ", updateTime=" + updateTime +
+                ", updateUser=" + updateUser +
+                ", createTime=" + createTime +
+                ", createUser=" + createUser +
+                ", state=" + state +
+                '}';
     }
 }

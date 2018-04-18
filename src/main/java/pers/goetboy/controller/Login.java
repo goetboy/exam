@@ -1,6 +1,6 @@
-package com.goetboy.controller;
+package pers.goetboy.controller;
 
-import com.goetboy.services.LoginServices;
+import pers.goetboy.services.LoginServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 

@@ -1,4 +1,4 @@
-package com.goetboy.entity;
+package pers.goetboy.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -24,5 +24,13 @@ public class User extends AbstractEntity{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                "} " + super.toString();
     }
 }

@@ -1,4 +1,4 @@
-package com.goetboy.services;
+package pers.goetboy.services;
 
 import org.springframework.stereotype.Service;
 
