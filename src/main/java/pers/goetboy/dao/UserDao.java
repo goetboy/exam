@@ -1,8 +1,6 @@
 package pers.goetboy.dao;
 
-import pers.goetboy.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import pers.goetboy.entity.sys.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 

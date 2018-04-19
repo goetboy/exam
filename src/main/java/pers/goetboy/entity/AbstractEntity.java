@@ -2,14 +2,28 @@ package pers.goetboy.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
+/**
+ * 实体顶级属性
+ */
 @Entity
-public abstract class AbstractEntity {
+public class AbstractEntity  implements Serializable{
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    /**
+     * 创造者
+     */
+    @Column(name = "createUser")
+    private Integer createUser;
+    /**
+     * 创建时间
+     */
+    @Column(name = "createTime")
+    private Timestamp createTime;
     /**
      * 更新时间
      */
@@ -20,20 +34,15 @@ public abstract class AbstractEntity {
      */
     @Column(name = "updateUser")
     private Integer updateUser;
+
     /**
-     * 创建时间
+     * 描述
      */
-    @Column(name = "createTime")
-    private Timestamp createTime;
-    /**
-     * 创造者
-     */
-    @Column(name = "createUser")
-    private Integer createUser;
+    private String remark;
     /**
      * 状态
      */
-    @Pattern(regexp = "$[0-1]{1}^",message = "状态 0停用|1异常")
+    @Pattern(regexp = "$[0-1]{1}^", message = "状态 0停用|1异常")
     @Column(name = "state")
     private Integer state;
 
@@ -43,6 +52,22 @@ public abstract class AbstractEntity {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(Integer createUser) {
+        this.createUser = createUser;
+    }
+
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
     }
 
     public Timestamp getUpdateTime() {
@@ -61,20 +86,12 @@ public abstract class AbstractEntity {
         this.updateUser = updateUser;
     }
 
-    public Timestamp getCreateTime() {
-        return createTime;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setCreateTime(Timestamp createTime) {
-        this.createTime = createTime;
-    }
-
-    public Integer getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(Integer createUser) {
-        this.createUser = createUser;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public Integer getState() {
@@ -89,10 +106,11 @@ public abstract class AbstractEntity {
     public String toString() {
         return "AbstractEntity{" +
                 "id=" + id +
+                ", createUser=" + createUser +
+                ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 ", updateUser=" + updateUser +
-                ", createTime=" + createTime +
-                ", createUser=" + createUser +
+                ", remark='" + remark + '\'' +
                 ", state=" + state +
                 '}';
     }
