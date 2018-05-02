@@ -42,7 +42,8 @@ public interface RoleMapper {
      */
     @Delete("delete from " + TABLE_NAME + " where id=#{id}")
     void delete(Integer id);
-
+    @Select("select name from role where userId= ")
+    List<Role> findByUserId(Integer userId);
     class RoleMapperProvider {
         /**
          * 插入动态语句
@@ -64,8 +65,8 @@ public interface RoleMapper {
                         VALUES("remark", "#{remark}");
                     if (role.getState() != null)
                         VALUES("state", "#{state}");
-                    VALUES("createTime", "SYSDATE()");
-                    VALUES("updateTime", "SYSDATE()");
+                    VALUES("createTime", "SYSDATE");
+                    VALUES("updateTime", "SYSDATE");
                 }
             }.toString();
         }
