@@ -18,7 +18,7 @@ public interface UserMapper {
     List<User> getAll();
 
     @Select("select * from " + TABLE_NAME + " where id=#{id}")
-    User get(Integer id);
+    User get(Long id);
 
     // @Insert("insert  into User( userName, password, createUser, createTime, updateTime, updateUser) values (#{userName},#{password},#{createUser},#{createTime},#{updateTime},#{updateUser})")
     //void insert(User user);
@@ -29,7 +29,7 @@ public interface UserMapper {
      * @param user
      */
     @InsertProvider(type = UserMapperProvider.class, method = "insert")
-    void dynamicInsert(User user);
+    Long dynamicInsert(User user);
 
     /**
      * 动态更新
@@ -42,9 +42,9 @@ public interface UserMapper {
     //void update(User user);
 
     @Delete("delete from " + TABLE_NAME + " where id=#{id}")
-    void delete(Integer id);
-    @Select("select id,userName,password,nickName,state from" + TABLE_NAME + "where userName=#{userName}")
-    User  findByUserName(String userName);
+    void delete(Long id);
+    @Select("select id,userName,password,nickName,state from " + TABLE_NAME + " where username=#{username}")
+    User  findByUserName(String username);
 
 
 
@@ -59,8 +59,8 @@ public interface UserMapper {
             return new SQL() {
                 {
                     INSERT_INTO(TABLE_NAME);
-                    if (user.getUserName() != null)
-                        VALUES("userName", "#{userName}");
+                    if (user.getUsername() != null)
+                        VALUES("username", "#{username}");
                     if (user.getPassword() != null)
                         VALUES("password", "#{password}");
                     if (user.getNickName() != null)
@@ -73,8 +73,8 @@ public interface UserMapper {
                         VALUES("remark", "#{remark}");
                     if (user.getState() != null)
                         VALUES("state", "#{state}");
-                    VALUES("updateTime", "SYSDATE()");
-                    VALUES("createTime", "SYSDATE()");
+                    VALUES("updateTime", "SYSDATE");
+                    VALUES("createTime", "SYSDATE");
                 }
             }.toString();
         }
@@ -83,8 +83,8 @@ public interface UserMapper {
             return new SQL() {
                 {
                     UPDATE(TABLE_NAME);
-                    if (user.getUserName() != null)
-                        SET("userName=#{userName}");
+                    if (user.getUsername() != null)
+                        SET("username=#{username}");
                     if (user.getPassword() != null)
                         SET("password=#{password}");
                     if (user.getNickName() != null)
@@ -95,7 +95,7 @@ public interface UserMapper {
                         SET("remark=#{remark}");
                     if (user.getState() != null)
                         SET("state=#{state}");
-                    SET("updateTime=SYSDATE()");
+                    SET("updateTime=SYSDATE");
                     WHERE("id=#{id}");
                 }
             }.toString();
@@ -111,11 +111,11 @@ public interface UserMapper {
                     /**
                      * 如果用户名为空密码不为空
                      */
-                    if (user.getUserName() != null && user.getPassword() == null)
-                        WHERE("userName like '%${userName}$'");
+                    if (user.getUsername() != null && user.getPassword() == null)
+                        WHERE("username like '%${username}$'");
                     //如果用户名和密码都不为空
-                    if (user.getUserName() != null && user.getPassword() != null) {
-                        WHERE("userName = #{userName}");
+                    if (user.getUsername() != null && user.getPassword() != null) {
+                        WHERE("username = #{username}");
                         WHERE("password = #{password}");
                     }
                     if (user.getNickName() != null) {

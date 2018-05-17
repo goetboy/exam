@@ -7,23 +7,25 @@ import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 import pers.goetboy.entity.sys.Role;
+import pers.goetboy.entity.sys.RoleMenu;
+import pers.goetboy.entity.sys.RoleUser;
 
 import java.util.List;
 
 @Repository
 public interface RoleMapper {
-    static  final String TABLE_NAME = Role.TABLE_NAME;
 
-    @Select("select * from " + TABLE_NAME)
+    @Select("select * from " + Role.TABLE_NAME)
     List<Role> getAll();
 
-    @Select("select * from " + TABLE_NAME + " where id=#{id}")
-    Role get(Integer id);
-
+    @Select("select * from " + Role.TABLE_NAME + " where id=#{id}")
+    Role get(Long id);
+    @Select("select * from " + Role.TABLE_NAME + " where name=#{name}")
+    Role getByName(String name);
 
     //void insert(Role role);
     @InsertProvider(type = RoleMapperProvider.class, method = "insert")
-    void dynamicInsert(Role role);
+   public Long dynamicInsert(Role role);
 
     //void update(Role role);
 
@@ -33,17 +35,25 @@ public interface RoleMapper {
      * @param role
      */
     @UpdateProvider(type = RoleMapperProvider.class, method = "update")
-    void dynamicUpdate(Role role);
+    public int dynamicUpdate(Role role);
 
     /**
      * 通过id删除
      *
      * @param id
      */
-    @Delete("delete from " + TABLE_NAME + " where id=#{id}")
-    void delete(Integer id);
-    @Select("select name from role where userId= ")
-    List<Role> findByUserId(Integer userId);
+    @Delete("delete from " + Role.TABLE_NAME + " where id=#{id}")
+    public void delete(Long id);
+    @Select("select t.name from "+Role.TABLE_NAME+" t where t.id in (select t1.role_id from "+ RoleUser.TABLE_NAME+ " t1 where  t1.user_id=#{userId}) ")
+    public List<Role> findByUserId(Long userId);
+
+    /**
+     * 通过菜单查角色
+     * @param menuId
+     * @return
+     */
+    @Select("select t.name from "+Role.TABLE_NAME+" t where t.id in (select t1.role_id from "+ RoleMenu.TABLE_NAME+ " t1 where  t1.menu_id=#{menuId}) ")
+    public List<Role> findByMenuId(Long menuId);
     class RoleMapperProvider {
         /**
          * 插入动态语句
@@ -54,7 +64,7 @@ public interface RoleMapper {
         public String insert(Role role) {
             return new SQL() {
                 {
-                    INSERT_INTO(TABLE_NAME);
+                    INSERT_INTO(Role.TABLE_NAME);
                     if (role.getName() != null)
                         VALUES("name", "#{name}");
                     if (role.getCreateUser() != null)
@@ -74,7 +84,7 @@ public interface RoleMapper {
         public String update(Role role) {
             return new SQL() {
                 {
-                    UPDATE(TABLE_NAME);
+                    UPDATE(Role.TABLE_NAME);
                     if (role.getName() != null)
                         SET("name=#{name}");
                     if (role.getUpdateUser() != null)
@@ -83,7 +93,7 @@ public interface RoleMapper {
                         SET("remark=#{remark}");
                     if (role.getState() != null)
                         SET("state=#{state}");
-                    SET("updateTime=SYSDATE()");
+                    SET("updateTime=SYSDATE");
                     WHERE("id=#{id}");
 
                 }
@@ -94,7 +104,7 @@ public interface RoleMapper {
             return new SQL() {
                 {
                     SELECT("id,name,state");
-                    FROM(TABLE_NAME);
+                    FROM(Role.TABLE_NAME);
                     if (role.getId() != null)
                         WHERE("id=#{id}");
                     if (role.getName() != null)

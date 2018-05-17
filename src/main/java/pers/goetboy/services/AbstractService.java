@@ -1,5 +1,7 @@
 package pers.goetboy.services;
 
+import pers.goetboy.common.exception.service.ServiceTipsException;
+
 import java.util.List;
 
 public abstract class AbstractService<T> {
@@ -9,31 +11,31 @@ public abstract class AbstractService<T> {
      * @param id
      * @return
      */
-    abstract T get(Integer id);
+    public abstract T get(Long id);
 
     /**
      * 查询所有
      *
      * @return
      */
-    abstract List<T> listAll();
+    public   abstract List<T> findAll();
 
     /**
      * 保存
      * @param t
      */
-    abstract void save(T t);
+    public  abstract Long save(T t) throws ServiceTipsException;
 
     /**
      * 更新
      * @param t
      */
-    abstract void update(T t);
+    public  abstract void update(T t);
 
     /**
      * 删除
      * @param id
      */
-    abstract void delete(Integer id);
+    public   abstract void delete(Long id);
 
 }

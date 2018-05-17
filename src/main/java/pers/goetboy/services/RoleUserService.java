@@ -12,7 +12,7 @@ public class RoleUserService extends AbstractService<RoleUser> {
     @Autowired
     RoleUserMapper roleUserMapper;
     @Override
-    public RoleUser get(Integer id) {
+    public RoleUser get(Long id) {
         return roleUserMapper.get(id);
     }
 
@@ -22,22 +22,36 @@ public class RoleUserService extends AbstractService<RoleUser> {
      * @return
      */
     @Override
-    List<RoleUser> listAll() {
+    public  List<RoleUser> findAll() {
         return roleUserMapper.getAll();
     }
 
+    /**
+     * 保存用户角色映射信息
+     * @param roleUser
+     * @return
+     */
     @Override
-    void save(RoleUser user) {
-        roleUserMapper.dynamicInsert(user);
+    public  Long save(RoleUser roleUser) {
+        Long id = roleUserMapper.dynamicInsert(roleUser);
+        return  id;
+    }
+    /**
+     * 更新用户角色映射信息
+     * @param roleUser
+     * @return
+     */
+    @Override
+    public  void update(RoleUser roleUser) {
+        roleUserMapper.dynamicUpdate(roleUser);
     }
 
+    /**
+     * 删除角色菜单映射信息
+     * @param id
+     */
     @Override
-    void update(RoleUser user) {
-        roleUserMapper.dynamicUpdate(user);
-    }
-
-    @Override
-    void delete(Integer id) {
+    public  void delete(Long id) {
         roleUserMapper.delete(id);
     }
 

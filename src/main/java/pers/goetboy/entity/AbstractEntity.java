@@ -1,7 +1,10 @@
 package pers.goetboy.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -13,10 +16,12 @@ public class AbstractEntity  implements Serializable{
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     /**
      * 创造者
      */
+    //@NotNull(message = "{table.createUser.notnull}")
+    //@Max(value = 10,message = "{table.createUser.max}")
     @Column(name = "createUser")
     private Integer createUser;
     /**
@@ -46,11 +51,11 @@ public class AbstractEntity  implements Serializable{
     @Column(name = "state")
     private Integer state;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

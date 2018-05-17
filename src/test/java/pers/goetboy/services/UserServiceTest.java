@@ -12,35 +12,35 @@ public class UserServiceTest extends BaseTest {
     UserService userService;
     @Test
     public  void testGet(){
-        User user =userService.get(1);
+        User user =userService.get(1L);
         System.out.println(user);
     }
     @Test
     public  void testSave(){
         User user = new User();
-        user.setUserName("test1");
+        user.setUsername("test1");
         user.setPassword("123456");
         user.setCreateUser(1);
         user.setState(1);
         userService.save(user);
-        userService.listAll().forEach(user1 -> System.out.println(user1));
+        userService.findAll().forEach(user1 -> System.out.println(user1));
     }
     @Test
     public  void testUpdate(){
         User user = new User();
-        user.setId(3);
-        user.setUserName("test1");
+        user.setId(3L);
+        user.setUsername("test1");
         user.setPassword("test");
         user.setState(1);
 
         userService.update(user);
-        User user1 =userService.get(3);
+        User user1 =userService.get(3L);
         System.out.println(user1);
     }
     @Test
     public  void testDelete(){
-        userService.delete(2);
-        User user1 =userService.get(2);
+        userService.delete(2L);
+        User user1 =userService.get(2L);
         System.out.println(user1);
     }
 }

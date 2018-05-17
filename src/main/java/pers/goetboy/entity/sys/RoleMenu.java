@@ -18,26 +18,26 @@ public class RoleMenu extends AbstractEntity implements Serializable {
      * 角色id
      */
     @Column(name = "role_id")
-    private Integer roleId;
+    private Long roleId;
     /**
      * 菜单id
      */
     @Column(name = "menu_id")
-    private Integer menuId;
+    private Long menuId;
 
-    public Integer getRoleId() {
+    public Long getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(Integer roleId) {
+    public void setRoleId(Long roleId) {
         this.roleId = roleId;
     }
 
-    public Integer getMenuId() {
+    public Long getMenuId() {
         return menuId;
     }
 
-    public void setMenuId(Integer menuId) {
+    public void setMenuId(Long menuId) {
         this.menuId = menuId;
     }
 

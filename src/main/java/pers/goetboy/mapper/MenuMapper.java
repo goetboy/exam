@@ -6,24 +6,24 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
-import pers.goetboy.entity.sys.Menu;
-import pers.goetboy.entity.sys.Role;
+import pers.goetboy.entity.sys.*;
 
 import java.util.List;
 
 @Repository
 public interface MenuMapper {
-    static final  String TABLE_NAME = Menu.TABLE_NAME;
-    @Select("select * from " + TABLE_NAME)
+
+
+    @Select("select * from " + Menu.TABLE_NAME)
     List<Menu> getAll();
 
-    @Select("select * from " + TABLE_NAME + " where id=#{id}")
-    Menu get(Integer id);
+    @Select("select * from " + Menu.TABLE_NAME + " where id=#{id}")
+    Menu get(Long id);
 
 
     //void insert(Role role);
     @InsertProvider(type = MenuMapperProvider.class, method = "insert")
-    void dynamicInsert(Menu menu);
+    Long dynamicInsert(Menu menu);
 
     //void update(Role role);
 
@@ -36,12 +36,30 @@ public interface MenuMapper {
     void dynamicUpdate(Menu menu);
 
     /**
-     * 通过id删除
+     * 通过用户名获取菜单权限
+     *
+     * @param userName
+     * @return
+     */
+    @Select("select * from " + Menu.TABLE_NAME + " m, " + RoleMenu.TABLE_NAME + " rm ," + RoleUser.TABLE_NAME + " ru," + User.TABLE_NAME + " u where m.id=rm.MENU_ID and rm.ROLE_ID=ru.ROLE_ID and ru.USER_ID=u.id and u.USERNAME = #{userName}")
+    List<Menu> listByUserName(String userName);
+
+    /**
+     * 通过角色名称获取菜单
+     *
+     * @param roleName
+     * @return
+     */
+    @Select("select * from " + Menu.TABLE_NAME + " m, " + RoleMenu.TABLE_NAME + " rm ," + Role.TABLE_NAME + " r where  m.id=rm.MENU_ID and rm.ROLE_ID = r.id and r.NAME = #{roleName}")
+    List<Menu> listByRoleName(String roleName);
+
+    /**
+     * 通过id删除菜单
      *
      * @param id
      */
-    @Delete("delete from " + TABLE_NAME + " where id=#{id}")
-    void delete(Integer id);
+    @Delete("delete from " + Menu.TABLE_NAME + " where id=#{id}")
+    void delete(Long id);
 
     class MenuMapperProvider {
 
@@ -54,7 +72,7 @@ public interface MenuMapper {
         public String insert(Menu menu) {
             return new SQL() {
                 {
-                    INSERT_INTO(TABLE_NAME);
+                    INSERT_INTO(Menu.TABLE_NAME);
                     if (menu.getName() != null)
                         VALUES("name", "#{name}");
                     if (menu.getParent() != null)
@@ -73,8 +91,8 @@ public interface MenuMapper {
                         VALUES("remark", "#{remark}");
                     if (menu.getState() != null)
                         VALUES("state", "#{state}");
-                    VALUES("createTime", "SYSDATE()");
-                    VALUES("updateTime", "SYSDATE()");
+                    VALUES("createTime", "SYSDATE");
+                    VALUES("updateTime", "SYSDATE");
                 }
             }.toString();
         }
@@ -82,7 +100,7 @@ public interface MenuMapper {
         public String update(Menu menu) {
             return new SQL() {
                 {
-                    UPDATE(TABLE_NAME);
+                    UPDATE(Menu.TABLE_NAME);
                     if (menu.getName() != null)
                         SET("name=#{name}");
                     if (menu.getParent() != null)
@@ -99,7 +117,7 @@ public interface MenuMapper {
                         SET("remark=#{remark}");
                     if (menu.getState() != null)
                         SET("state=#{state}");
-                    SET("updateTime=SYSDATE()");
+                    SET("updateTime=SYSDATE");
                     WHERE("id=#{id}");
 
                 }
@@ -110,7 +128,7 @@ public interface MenuMapper {
             return new SQL() {
                 {
                     SELECT("id,name,url,type,parent,sort,state");
-                    FROM(TABLE_NAME);
+                    FROM(Menu.TABLE_NAME);
                     if (menu.getId() != null)
                         WHERE("id=#{id}");
                     if (menu.getName() != null)

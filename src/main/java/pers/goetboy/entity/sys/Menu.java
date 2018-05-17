@@ -2,9 +2,15 @@ package pers.goetboy.entity.sys;
 
 import pers.goetboy.entity.AbstractEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 菜单表
@@ -16,24 +22,32 @@ public class Menu extends AbstractEntity implements Serializable {
     /**
      * 角色名
      */
-
+    @NotNull(message = "{menu.name.notnull}")
+    @Size(max = 20,message = "{menu.name.size}")
+    @Column(name = "name")
     private String name;
     /**
      * 菜单地址
      */
+    @Column(name = "url")
     private String url;
     /**
      * 菜单类型
      */
+    @Column(name = "type")
     private Integer type;
     /**
      * 父菜单id
      */
+    @Column(name = "parent")
     private Integer parent;
     /**
      * 排序
      */
+    @Column(name = "sort")
     private Integer sort;
+    @Transient
+    private List<Role> roles;
 
     public String getName() {
         return name;
@@ -75,6 +89,14 @@ public class Menu extends AbstractEntity implements Serializable {
         this.sort = sort;
     }
 
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
     @Override
     public String toString() {
         return "Menu{" +
@@ -83,6 +105,7 @@ public class Menu extends AbstractEntity implements Serializable {
                 ", type=" + type +
                 ", parent=" + parent +
                 ", sort=" + sort +
+                ", roles=" + roles +
                 "} " + super.toString();
     }
 }

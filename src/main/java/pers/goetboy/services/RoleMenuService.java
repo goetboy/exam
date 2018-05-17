@@ -12,7 +12,7 @@ public class RoleMenuService extends AbstractService<RoleMenu> {
     @Autowired
     RoleMenuMapper roleMenuMapper;
     @Override
-    public RoleMenu get(Integer id) {
+    public RoleMenu get(Long id) {
         return roleMenuMapper.get(id);
     }
 
@@ -22,22 +22,36 @@ public class RoleMenuService extends AbstractService<RoleMenu> {
      * @return
      */
     @Override
-    List<RoleMenu> listAll() {
+    public  List<RoleMenu> findAll() {
         return roleMenuMapper.getAll();
     }
 
+    /**
+     * 保存角色菜单映射信息
+     * @param roleMenu
+     * @return
+     */
     @Override
-    void save(RoleMenu user) {
-        roleMenuMapper.dynamicInsert(user);
+    public  Long save(RoleMenu roleMenu) {
+        Long id = roleMenuMapper.dynamicInsert(roleMenu);
+        return id;
     }
 
+    /**
+     * 更新角色菜单映射信息
+     * @param roleMenu
+     */
     @Override
-    void update(RoleMenu user) {
-        roleMenuMapper.dynamicUpdate(user);
+    public   void update(RoleMenu roleMenu) {
+        roleMenuMapper.dynamicUpdate(roleMenu);
     }
 
+    /**
+     * 删除角色菜单映射信息
+     * @param id
+     */
     @Override
-    void delete(Integer id) {
+    public  void delete(Long id) {
         roleMenuMapper.delete(id);
     }
 

@@ -6,45 +6,61 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
+import pers.goetboy.entity.sys.Menu;
 import pers.goetboy.entity.sys.Role;
 import pers.goetboy.entity.sys.RoleMenu;
-import pers.goetboy.entity.sys.RoleUser;
 
 import java.util.List;
 
 @Repository
 public interface RoleMenuMapper {
 
-  static final String TABLE_NAME = RoleMenu.TABLE_NAME;
+    /**
+     * 查询角色菜单关系
+     * @return
+     */
+    @Select("select * from " + RoleMenu.TABLE_NAME)
+    public List<RoleMenu> getAll();
 
-    @Select("select * from " + TABLE_NAME)
-    List<RoleMenu> getAll();
+    /**
+     * 通过id查询角色菜单关系
+     * @param id
+     * @return
+     */
+    @Select("select * from " + RoleMenu.TABLE_NAME + " where id=#{id}")
+    public RoleMenu get(Long id);
 
-    @Select("select * from " + TABLE_NAME + " where id=#{id}")
-    RoleMenu get(Integer id);
 
-
-    //void insert(Role role);
+    /**
+     * 动态更新菜单角色关系对象
+     * @param roleMenu
+     */
     @InsertProvider(type = RoleMenuMapperProvider.class, method = "insert")
-    void dynamicInsert(RoleMenu roleMenu);
+    public Long dynamicInsert(RoleMenu roleMenu);
 
-    //void update(Role role);
-
+    /**
+     * 删除角色对应的菜单关系
+     * @param id
+     */
+    @Delete("delete " + RoleMenu.TABLE_NAME + " where role_id in (select id from " + Role.TABLE_NAME + " where id=#{id} ) ")
+    public void deleteByRoleId(Long id);
+    @Delete("delete " + RoleMenu.TABLE_NAME + " where menu_id in (select id from " + Menu.TABLE_NAME + " where id=#{id} ) ")
+    public void deleteByMenuId(Long id);
     /**
      * 根据传入条件更新
      *
      * @param roleMenu
      */
     @UpdateProvider(type = RoleMenuMapperProvider.class, method = "update")
-    void dynamicUpdate(RoleMenu roleMenu);
+    public void dynamicUpdate(RoleMenu roleMenu);
 
     /**
      * 通过id删除
      *
      * @param id
      */
-    @Delete("delete from " + TABLE_NAME + " where id=#{id}")
-    void delete(Integer id);
+    @Delete("delete from " + RoleMenu.TABLE_NAME + " where id=#{id}")
+    public void delete(Long id);
 
     class RoleMenuMapperProvider {
         /**
@@ -56,7 +72,7 @@ public interface RoleMenuMapper {
         public String insert(RoleMenu roleMenu) {
             return new SQL() {
                 {
-                    INSERT_INTO(TABLE_NAME);
+                    INSERT_INTO(RoleMenu.TABLE_NAME);
                     if (roleMenu.getRoleId() != null)
                         VALUES("roleId", "#{roleId}");
                     if (roleMenu.getMenuId() != null)
@@ -69,8 +85,8 @@ public interface RoleMenuMapper {
                         VALUES("remark", "#{remark}");
                     if (roleMenu.getState() != null)
                         VALUES("state", "#{state}");
-                    VALUES("createTime", "SYSDATE()");
-                    VALUES("updateTime", "SYSDATE()");
+                    VALUES("createTime", "SYSDATE");
+                    VALUES("updateTime", "SYSDATE");
                 }
             }.toString();
         }
@@ -78,7 +94,7 @@ public interface RoleMenuMapper {
         public String update(RoleMenu roleMenu) {
             return new SQL() {
                 {
-                    UPDATE(TABLE_NAME);
+                    UPDATE(RoleMenu.TABLE_NAME);
                     if (roleMenu.getMenuId() != null)
                         SET("menuId=#{menuId}");
                     if (roleMenu.getRoleId() != null)
@@ -89,7 +105,7 @@ public interface RoleMenuMapper {
                         SET("remark=#{remark}");
                     if (roleMenu.getState() != null)
                         SET("state=#{state}");
-                    SET("updateTime=SYSDATE()");
+                    SET("updateTime=SYSDATE");
                     WHERE("id=#{id}");
 
                 }
@@ -100,7 +116,7 @@ public interface RoleMenuMapper {
             return new SQL() {
                 {
                     SELECT("id,menuId,roleId,state");
-                    FROM(TABLE_NAME);
+                    FROM(RoleMenu.TABLE_NAME);
                     if (roleMenu.getId() != null)
                         WHERE("id=#{id}");
                     if (roleMenu.getMenuId() != null)

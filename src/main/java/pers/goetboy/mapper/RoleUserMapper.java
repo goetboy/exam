@@ -14,18 +14,18 @@ import java.util.List;
 @Repository
 public interface RoleUserMapper {
 
-   static final String TABLE_NAME = RoleUser.TABLE_NAME;
 
-    @Select("select * from " + TABLE_NAME)
-    List<RoleUser> getAll();
 
-    @Select("select * from " + TABLE_NAME + " where id=#{id}")
-    RoleUser get(Integer id);
+    @Select("select * from " + RoleUser.TABLE_NAME)
+    public List<RoleUser> getAll();
+
+    @Select("select * from " + RoleUser.TABLE_NAME + " where id=#{id}")
+    public RoleUser get(Long id);
 
 
     //void insert(Role role);
     @InsertProvider(type = RoleUserMapperProvider.class, method = "insert")
-    void dynamicInsert(RoleUser roleUser);
+    public Long dynamicInsert(RoleUser roleUser);
 
     //void update(Role role);
 
@@ -35,15 +35,28 @@ public interface RoleUserMapper {
      * @param roleUser
      */
     @UpdateProvider(type = RoleUserMapperProvider.class, method = "update")
-    void dynamicUpdate(RoleUser roleUser);
+    public void dynamicUpdate(RoleUser roleUser);
 
+    /**
+     * 通过角色id删除用户角色映射信息
+     * @param roleId
+     */
+    @Delete("delete " +RoleUser.TABLE_NAME+ " where role_id in (select id from "+ Role.TABLE_NAME +" where id=#{roleId} ) ")
+    public void deleteByRoleId(Long roleId);
+
+    /**
+     * 通过用户id删除用户角色映射信息
+     * @param userId
+     */
+    @Delete("delete " +RoleUser.TABLE_NAME+ " where role_id in (select id from "+ Role.TABLE_NAME +" where id=#{userId} ) ")
+    public void deleteByUserId(Long userId);
     /**
      * 通过id删除
      *
      * @param id
      */
-    @Delete("delete from " + TABLE_NAME + " where id=#{id}")
-    void delete(Integer id);
+    @Delete("delete from " + RoleUser.TABLE_NAME + " where id=#{id}")
+    void delete(Long id);
 
     class RoleUserMapperProvider {
         /**
@@ -55,7 +68,7 @@ public interface RoleUserMapper {
         public String insert(RoleUser roleUser) {
             return new SQL() {
                 {
-                    INSERT_INTO(TABLE_NAME);
+                    INSERT_INTO(RoleUser.TABLE_NAME);
                     if (roleUser.getRoleId() != null)
                         VALUES("roleId", "#{roleId}");
                     if (roleUser.getUserId() != null)
@@ -68,8 +81,8 @@ public interface RoleUserMapper {
                         VALUES("remark", "#{remark}");
                     if (roleUser.getState() != null)
                         VALUES("state", "#{state}");
-                    VALUES("createTime", "SYSDATE()");
-                    VALUES("updateTime", "SYSDATE()");
+                    VALUES("createTime", "SYSDATE");
+                    VALUES("updateTime", "SYSDATE");
                 }
             }.toString();
         }
@@ -77,7 +90,7 @@ public interface RoleUserMapper {
         public String update(RoleUser roleUser) {
             return new SQL() {
                 {
-                    UPDATE(TABLE_NAME);
+                    UPDATE(RoleUser.TABLE_NAME);
                     if (roleUser.getUserId() != null)
                         SET("userId=#{userId}");
                     if (roleUser.getRoleId() != null)
@@ -88,7 +101,7 @@ public interface RoleUserMapper {
                         SET("remark=#{remark}");
                     if (roleUser.getState() != null)
                         SET("state=#{state}");
-                    SET("updateTime=SYSDATE()");
+                    SET("updateTime=SYSDATE");
                     WHERE("id=#{id}");
 
                 }
@@ -99,7 +112,7 @@ public interface RoleUserMapper {
             return new SQL() {
                 {
                     SELECT("id,userId,roleId,state");
-                    FROM(TABLE_NAME);
+                    FROM(RoleUser.TABLE_NAME);
                     if (roleUser.getId() != null)
                         WHERE("id=#{id}");
                     if (roleUser.getUserId() != null)
