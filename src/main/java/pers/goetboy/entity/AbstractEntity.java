@@ -22,27 +22,28 @@ public class AbstractEntity  implements Serializable{
      */
     //@NotNull(message = "{table.createUser.notnull}")
     //@Max(value = 10,message = "{table.createUser.max}")
-    @Column(name = "createUser")
+    @Column(name = "create_User")
     private Integer createUser;
     /**
      * 创建时间
      */
-    @Column(name = "createTime")
+    @Column(name = "create_Time")
     private Timestamp createTime;
     /**
      * 更新时间
      */
-    @Column(name = "updateTime")
+    @Column(name = "update_Time")
     private Timestamp updateTime;
     /**
      * 更新人
      */
-    @Column(name = "updateUser")
+    @Column(name = "update_User")
     private Integer updateUser;
 
     /**
      * 描述
      */
+    @Column(name = "remark")
     private String remark;
     /**
      * 状态

@@ -85,8 +85,10 @@ public class UserService extends AbstractService<User> {
     public void updatePassword(Long id, String password) throws ServiceTipsException {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         User user = userMapper.get(id);
-        if (user == null)
+        if (user == null) {
             throw new ServiceTipsException("找不到对应的用户信息");
+        }
+
         user.setPassword(bCryptPasswordEncoder.encode(password));
 
         userMapper.dynamicUpdate(user);

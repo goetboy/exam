@@ -1,4 +1,4 @@
-package pers.goetboy.common.exception.common.advice;
+package pers.goetboy.common.advice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

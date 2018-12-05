@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import pers.goetboy.common.exception.redis.RedisClient;
+import pers.goetboy.common.redis.RedisClient;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;

@@ -21,6 +21,7 @@ public class RoleService extends AbstractService<Role> {
     @Autowired
     RoleMenuMapper roleMenuMapper;
 
+    @Override
     public Role get(Long id) {
         return roleMapper.get(id);
     }
@@ -44,8 +45,9 @@ public class RoleService extends AbstractService<Role> {
     @Override
     public Long save(Role role) throws ServiceTipsException {
         Role o_role = roleMapper.getByName(role.getName());
-        if (o_role != null)
+        if (o_role != null) {
             throw new ServiceTipsException("已经有同名角色存在");
+        }
         Long id = roleMapper.dynamicInsert(role);
         List<Menu> menus = role.getMenus();
         if (menus != null && !menus.isEmpty()) {

@@ -32,8 +32,9 @@ public class UserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userMapper.findByUserName(s);
-        if (user == null)
+        if (user == null) {
             throw new UsernameNotFoundException("1001.001");
+        }
         List<Role> roles = roleMapper.findByUserId(user.getId());
         List<Menu> menus = menuMapper.listByUserName(user.getUsername());
         user.setRoles(roles);
