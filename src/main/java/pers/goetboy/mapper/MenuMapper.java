@@ -83,16 +83,16 @@ public interface MenuMapper {
                         VALUES("type", "#{type}");
                     if (menu.getUrl() != null)
                         VALUES("url", "#{url}");
-                    if (menu.getCreateUser() != null)
-                        VALUES("createUser", "#{createUser}");
-                    if (menu.getUpdateUser() != null)
-                        VALUES("updateUser", "#{updateUser}");
+                    if (menu.getCreatedUser() != null)
+                        VALUES("created_User", "#{createdUser}");
+                    if (menu.getUpdatedUser() != null)
+                        VALUES("updated_User", "#{updatedUser}");
                     if (menu.getRemark() != null)
                         VALUES("remark", "#{remark}");
                     if (menu.getState() != null)
                         VALUES("state", "#{state}");
-                    VALUES("createTime", "SYSDATE");
-                    VALUES("updateTime", "SYSDATE");
+                    VALUES("created_Time", "SYSDATE");
+                    VALUES("updated_Time", "SYSDATE");
                 }
             }.toString();
         }
@@ -111,13 +111,13 @@ public interface MenuMapper {
                         SET("type=#{type}");
                     if (menu.getUrl() != null)
                         SET("url=#{url}");
-                    if (menu.getUpdateUser() != null)
-                        SET("updateUser=#{updateUser}");
+                    if (menu.getUpdatedUser() != null)
+                        SET("updated_User=#{updatedUser}");
                     if (menu.getRemark() != null)
                         SET("remark=#{remark}");
                     if (menu.getState() != null)
                         SET("state=#{state}");
-                    SET("updateTime=SYSDATE");
+                    SET("updatedTime=SYSDATE");
                     WHERE("id=#{id}");
 
                 }

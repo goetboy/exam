@@ -25,10 +25,9 @@ public class UserServiceTest extends BaseTest {
     public  void testSave(){
         User user = new User();
         user.setUsername("test1");
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-        user.setPassword(bCryptPasswordEncoder.encode("123456"));
-        user.setCreateUser(1);
+        user.setPassword("123456");
+        user.setCreatedUser(1);
         user.setState(1);
         userService.save(user);
         userService.findAll().forEach(user1 -> System.out.println(user1));

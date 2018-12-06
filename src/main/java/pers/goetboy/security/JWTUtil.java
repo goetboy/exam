@@ -1,8 +1,9 @@
-package pers.goetboy.utils;
+package pers.goetboy.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -25,14 +26,15 @@ public class JWTUtil {
     private Long expiration; //过期时间
 
     /**
-     * 从token中获取用户account
+     * 从token中获取用户
+     *
      * @param token
      * @return
      */
     public String getUserAccountFromToken(String token) {
         String useraccount;
         try {
-            final Claims claims = getClaimsFromToken(token);
+            Claims claims = getClaimsFromToken(token);
             useraccount = claims.getSubject();
         } catch (Exception e) {
             useraccount = null;
@@ -42,6 +44,7 @@ public class JWTUtil {
 
     /**
      * 从token中获取创建时间
+     *
      * @param token
      * @return
      */
@@ -58,6 +61,7 @@ public class JWTUtil {
 
     /**
      * 获取token的过期时间
+     *
      * @param token
      * @return
      */
@@ -74,6 +78,7 @@ public class JWTUtil {
 
     /**
      * 从token中获取claims
+     *
      * @param token
      * @return
      */
@@ -92,6 +97,7 @@ public class JWTUtil {
 
     /**
      * 生存token的过期时间
+     *
      * @return
      */
     private Date generateExpirationDate() {
@@ -100,19 +106,20 @@ public class JWTUtil {
 
     /**
      * 判断token是否过期
+     *
      * @param token
      * @return
      */
     private Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
-        Boolean result= expiration.before(new Date());
-        return result;
-    }
 
+        return expiration.before(new Date());
+    }
 
 
     /**
      * 生成token
+     *
      * @param userDetails
      * @return
      */
@@ -123,7 +130,7 @@ public class JWTUtil {
         return generateToken(claims);
     }
 
-    String generateToken(Map<String, Object> claims) {
+    private String generateToken(Map<String, Object> claims) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(generateExpirationDate())
@@ -133,6 +140,7 @@ public class JWTUtil {
 
     /**
      * token 是否可刷新
+     *
      * @param token
      * @return
      */
@@ -143,15 +151,21 @@ public class JWTUtil {
 
     /**
      * 刷新token
+     *
      * @param token
      * @return
      */
     public String refreshToken(String token) {
         String refreshedToken;
+        if (!isTokenExpired(token)) {
+            return null;
+        }
         try {
             final Claims claims = getClaimsFromToken(token);
             claims.put(CLAIM_KEY_CREATED, new Date());
             refreshedToken = generateToken(claims);
+
+
         } catch (Exception e) {
             refreshedToken = null;
         }
@@ -160,6 +174,7 @@ public class JWTUtil {
 
     /**
      * 验证token
+     *
      * @param token
      * @param userDetails
      * @return
@@ -168,7 +183,7 @@ public class JWTUtil {
 
         final String useraccount = getUserAccountFromToken(token);
         final Date created = getCreatedDateFromToken(token);
-        Boolean result= (
+        Boolean result = (
                 useraccount.equals(userDetails.getUsername())
                         && !isTokenExpired(token)
         );

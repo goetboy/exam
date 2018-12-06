@@ -65,16 +65,16 @@ public interface UserMapper {
                         VALUES("password", "#{password}");
                     if (user.getNickName() != null)
                         VALUES("nickName", "#{nickName}");
-                    if (user.getCreateUser() != null)
-                        VALUES("createUser", "#{createUser}");
-                    if (user.getUpdateUser() != null)
-                        VALUES("updateUser", "#{updateUser}");
+                    if (user.getCreatedUser() != null)
+                        VALUES("created_User", "#{createdUser}");
+                    if (user.getUpdatedUser() != null)
+                        VALUES("updated_User", "#{updatedUser}");
                     if (user.getRemark() != null)
                         VALUES("remark", "#{remark}");
                     if (user.getState() != null)
                         VALUES("state", "#{state}");
-                    VALUES("updateTime", "SYSDATE");
-                    VALUES("createTime", "SYSDATE");
+                    VALUES("updated_Time", "SYSDATE");
+                    VALUES("created_Time", "SYSDATE");
                 }
             }.toString();
         }
@@ -89,13 +89,13 @@ public interface UserMapper {
                         SET("password=#{password}");
                     if (user.getNickName() != null)
                         SET("nickName=#{nickName}");
-                    if (user.getUpdateUser() != null)
-                        SET("updateUser=#{updateUser}");
+                    if (user.getUpdatedUser() != null)
+                        SET("updated_User=#{updatedUser}");
                     if (user.getRemark() != null)
                         SET("remark=#{remark}");
                     if (user.getState() != null)
                         SET("state=#{state}");
-                    SET("updateTime=SYSDATE");
+                    SET("updated_Time=SYSDATE");
                     WHERE("id=#{id}");
                 }
             }.toString();

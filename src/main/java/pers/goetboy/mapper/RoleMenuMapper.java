@@ -77,16 +77,16 @@ public interface RoleMenuMapper {
                         VALUES("roleId", "#{roleId}");
                     if (roleMenu.getMenuId() != null)
                         VALUES("menuId", "#{menuId}");
-                    if (roleMenu.getCreateUser() != null)
-                        VALUES("createUser", "#{createUser}");
-                    if (roleMenu.getUpdateUser() != null)
-                        VALUES("updateUser", "#{updateUser}");
+                    if (roleMenu.getCreatedUser() != null)
+                        VALUES("created_User", "#{createdUser}");
+                    if (roleMenu.getUpdatedUser() != null)
+                        VALUES("updated_User", "#{updatedUser}");
                     if (roleMenu.getRemark() != null)
                         VALUES("remark", "#{remark}");
                     if (roleMenu.getState() != null)
                         VALUES("state", "#{state}");
-                    VALUES("createTime", "SYSDATE");
-                    VALUES("updateTime", "SYSDATE");
+                    VALUES("created_Time", "SYSDATE");
+                    VALUES("updated_Time", "SYSDATE");
                 }
             }.toString();
         }
@@ -99,13 +99,13 @@ public interface RoleMenuMapper {
                         SET("menuId=#{menuId}");
                     if (roleMenu.getRoleId() != null)
                         SET("roleId=#{roleId}");
-                    if (roleMenu.getUpdateUser() != null)
-                        SET("updateUser=#{updateUser}");
+                    if (roleMenu.getUpdatedUser() != null)
+                        SET("updated_User=#{updatedUser}");
                     if (roleMenu.getRemark() != null)
                         SET("remark=#{remark}");
                     if (roleMenu.getState() != null)
                         SET("state=#{state}");
-                    SET("updateTime=SYSDATE");
+                    SET("updated_Time=SYSDATE");
                     WHERE("id=#{id}");
 
                 }

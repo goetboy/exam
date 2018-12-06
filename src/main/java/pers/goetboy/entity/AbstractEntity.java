@@ -12,7 +12,7 @@ import java.sql.Timestamp;
  * 实体顶级属性
  */
 @Entity
-public class AbstractEntity  implements Serializable{
+public class AbstractEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,23 +22,23 @@ public class AbstractEntity  implements Serializable{
      */
     //@NotNull(message = "{table.createUser.notnull}")
     //@Max(value = 10,message = "{table.createUser.max}")
-    @Column(name = "create_User")
-    private Integer createUser;
+    @Column(name = "created_User")
+    private Integer createdUser;
     /**
      * 创建时间
      */
-    @Column(name = "create_Time")
-    private Timestamp createTime;
+    @Column(name = "created_time")
+    private Timestamp createdTime;
     /**
      * 更新时间
      */
-    @Column(name = "update_Time")
-    private Timestamp updateTime;
+    @Column(name = "updated_Time")
+    private Timestamp updatedTime;
     /**
      * 更新人
      */
-    @Column(name = "update_User")
-    private Integer updateUser;
+    @Column(name = "updated_User")
+    private Integer updatedUser;
 
     /**
      * 描述
@@ -60,36 +60,36 @@ public class AbstractEntity  implements Serializable{
         this.id = id;
     }
 
-    public Integer getCreateUser() {
-        return createUser;
+    public Integer getCreatedUser() {
+        return createdUser;
     }
 
-    public void setCreateUser(Integer createUser) {
-        this.createUser = createUser;
+    public void setCreatedUser(Integer createdUser) {
+        this.createdUser = createdUser;
     }
 
-    public Timestamp getCreateTime() {
-        return createTime;
+    public Timestamp getCreatedTime() {
+        return createdTime;
     }
 
-    public void setCreateTime(Timestamp createTime) {
-        this.createTime = createTime;
+    public void setCreatedTime(Timestamp createdTime) {
+        this.createdTime = createdTime;
     }
 
-    public Timestamp getUpdateTime() {
-        return updateTime;
+    public Timestamp getUpdatedTime() {
+        return updatedTime;
     }
 
-    public void setUpdateTime(Timestamp updateTime) {
-        this.updateTime = updateTime;
+    public void setUpdatedTime(Timestamp updatedTime) {
+        this.updatedTime = updatedTime;
     }
 
-    public Integer getUpdateUser() {
-        return updateUser;
+    public Integer getUpdatedUser() {
+        return updatedUser;
     }
 
-    public void setUpdateUser(Integer updateUser) {
-        this.updateUser = updateUser;
+    public void setUpdatedUser(Integer updatedUser) {
+        this.updatedUser = updatedUser;
     }
 
     public String getRemark() {
@@ -112,10 +112,10 @@ public class AbstractEntity  implements Serializable{
     public String toString() {
         return "AbstractEntity{" +
                 "id=" + id +
-                ", createUser=" + createUser +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                ", updateUser=" + updateUser +
+                ", createdUser=" + createdUser +
+                ", createdTime=" + createdTime +
+                ", updatedTime=" + updatedTime +
+                ", updatedUser=" + updatedUser +
                 ", remark='" + remark + '\'' +
                 ", state=" + state +
                 '}';

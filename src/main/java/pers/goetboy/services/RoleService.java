@@ -21,7 +21,6 @@ public class RoleService extends AbstractService<Role> {
     @Autowired
     RoleMenuMapper roleMenuMapper;
 
-    @Override
     public Role get(Long id) {
         return roleMapper.get(id);
     }
@@ -31,18 +30,19 @@ public class RoleService extends AbstractService<Role> {
      *
      * @return
      */
-    @Override
+
     public List<Role> findAll() {
         return roleMapper.getAll();
     }
 
     /**
      * 保存角色信息
+     *
      * @param role
      * @return
      * @throws ServiceTipsException
      */
-    @Override
+
     public Long save(Role role) throws ServiceTipsException {
         Role o_role = roleMapper.getByName(role.getName());
         if (o_role != null) {
@@ -66,7 +66,7 @@ public class RoleService extends AbstractService<Role> {
      *
      * @param role
      */
-    @Override
+
     public void update(Role role) {
         roleMenuMapper.deleteByRoleId(role.getId());
         roleMapper.dynamicUpdate(role);
@@ -85,11 +85,21 @@ public class RoleService extends AbstractService<Role> {
     }
 
     /**
+     * 查询用户下所有角色
+     *
+     * @param userId
+     * @return
+     */
+    public List<Role> listRoleByUser(Long userId) {
+        return roleMapper.findByUserId(userId);
+    }
+
+    /**
      * 删除角色以及角色对应的用户角色映射和角色菜单映射
      *
      * @param id
      */
-    @Override
+
     public void delete(Long id) {
         roleMapper.delete(id);
         roleUserMapper.deleteByRoleId(id);

@@ -67,16 +67,16 @@ public interface RoleMapper {
                     INSERT_INTO(Role.TABLE_NAME);
                     if (role.getName() != null)
                         VALUES("name", "#{name}");
-                    if (role.getCreateUser() != null)
-                        VALUES("createUser", "#{createUser}");
-                    if (role.getUpdateUser() != null)
-                        VALUES("updateUser", "#{updateUser}");
+                    if (role.getCreatedUser() != null)
+                        VALUES("created_User", "#{createdUser}");
+                    if (role.getUpdatedUser() != null)
+                        VALUES("updated_User", "#{updatedUser}");
                     if (role.getRemark() != null)
                         VALUES("remark", "#{remark}");
                     if (role.getState() != null)
                         VALUES("state", "#{state}");
-                    VALUES("createTime", "SYSDATE");
-                    VALUES("updateTime", "SYSDATE");
+                    VALUES("created_Time", "SYSDATE");
+                    VALUES("updated_Time", "SYSDATE");
                 }
             }.toString();
         }
@@ -87,13 +87,13 @@ public interface RoleMapper {
                     UPDATE(Role.TABLE_NAME);
                     if (role.getName() != null)
                         SET("name=#{name}");
-                    if (role.getUpdateUser() != null)
-                        SET("updateUser=#{updateUser}");
+                    if (role.getUpdatedUser() != null)
+                        SET("updatedUser=#{updatedUser}");
                     if (role.getRemark() != null)
                         SET("remark=#{remark}");
                     if (role.getState() != null)
                         SET("state=#{state}");
-                    SET("updateTime=SYSDATE");
+                    SET("updated_Time=SYSDATE");
                     WHERE("id=#{id}");
 
                 }
