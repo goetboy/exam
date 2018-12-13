@@ -40,12 +40,12 @@ public interface RoleMenuMapper {
 
     /**
      * 删除角色对应的菜单关系
-     * @param id
+     * @param roleId
      */
-    @Delete("delete " + RoleMenu.TABLE_NAME + " where role_id in (select id from " + Role.TABLE_NAME + " where id=#{id} ) ")
-    public void deleteByRoleId(Long id);
-    @Delete("delete " + RoleMenu.TABLE_NAME + " where menu_id in (select id from " + Menu.TABLE_NAME + " where id=#{id} ) ")
-    public void deleteByMenuId(Long id);
+    @Delete("delete " + RoleMenu.TABLE_NAME + " where role_id =#{roleId} ")
+    public void deleteByRoleId(Long roleId);
+    @Delete("delete " + RoleMenu.TABLE_NAME + " where menu_id =#{menuId} ")
+    public void deleteByMenuId(Long menuId);
     /**
      * 根据传入条件更新
      *

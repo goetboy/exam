@@ -1,5 +1,6 @@
 package pers.goetboy.services;
 
+import lombok.ToString;
 import org.apache.commons.codec.Decoder;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.junit.Test;
@@ -24,13 +25,12 @@ public class UserServiceTest extends BaseTest {
     @Test
     public  void testSave(){
         User user = new User();
-        user.setUsername("test1");
-
+        user.setUsername("admin");
         user.setPassword("123456");
         user.setCreatedUser(1);
         user.setState(1);
         userService.save(user);
-        userService.findAll().forEach(user1 -> System.out.println(user1));
+        userService.listUser().forEach(user1 -> System.out.println(user1));
     }
     @Test
     public  void testUpdate(){
@@ -40,16 +40,19 @@ public class UserServiceTest extends BaseTest {
         user.setPassword("test");
         user.setState(1);
 
-        userService.update(user);
+        userService.updateUser(user);
         User user1 =userService.get(3L);
         System.out.println(user1);
     }
     @Test
     public  void testDelete(){
-        userService.delete(2L);
+        userService.deleteUser(2L);
         User user1 =userService.get(2L);
         System.out.println(user1);
     }
-
+    @Test
+    public void testLogin(){
+        userService.login("admin","123456");
+    }
 
 }

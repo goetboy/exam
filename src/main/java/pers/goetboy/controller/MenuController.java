@@ -7,7 +7,6 @@ import pers.goetboy.entity.sys.Menu;
 import pers.goetboy.services.MenuService;
 
 import java.util.List;
-@CrossOrigin
 @RestController
 @RequestMapping("/menu")
 public class MenuController extends AbstractController {

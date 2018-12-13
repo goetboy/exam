@@ -13,21 +13,20 @@ import java.io.Serializable;
  * 角色用户映射表
  */
 @Entity
-@Table(name = RoleMenu.TABLE_NAME)
+@Table(name = UserRole.TABLE_NAME)
 @Data
 @ToString
-public class RoleMenu extends AbstractEntity implements Serializable {
-    public final static String TABLE_NAME = "sys_role_menu";
+public class UserRole extends AbstractEntity implements Serializable {
+    public final static String TABLE_NAME = "sys_user_role";
     /**
      * 角色id
      */
     @Column(name = "role_id")
     private Long roleId;
     /**
-     * 菜单id
+     * 用户id
      */
-    @Column(name = "menu_id")
-    private Long menuId;
-
+    @Column(name = "user_id")
+    private Long userId;
 
 }

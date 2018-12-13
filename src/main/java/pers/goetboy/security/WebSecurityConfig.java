@@ -29,20 +29,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JWTAuthenticationTokenFilter jwtAuthenticationTokenFilter;
     private EntryPointUnauthorizedHandler entryPointUnauthorizedHandler;
     private RestAccessDeniedHandler restAccessDeniedHandler;
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public WebSecurityConfig(    @Qualifier("jwtUserDetail") UserDetailsService userDetailsService, JWTAuthenticationTokenFilter jwtAuthenticationTokenFilter, EntryPointUnauthorizedHandler entryPointUnauthorizedHandler, RestAccessDeniedHandler restAccessDeniedHandler) {
+    public WebSecurityConfig(@Qualifier("jwtUserDetail") UserDetailsService userDetailsService, JWTAuthenticationTokenFilter jwtAuthenticationTokenFilter, EntryPointUnauthorizedHandler entryPointUnauthorizedHandler, RestAccessDeniedHandler restAccessDeniedHandler) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthenticationTokenFilter = jwtAuthenticationTokenFilter;
         this.entryPointUnauthorizedHandler = entryPointUnauthorizedHandler;
         this.restAccessDeniedHandler = restAccessDeniedHandler;
-        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder.userDetailsService(this.userDetailsService).passwordEncoder(passwordEncoder);
+        authenticationManagerBuilder.userDetailsService(this.userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
     @Override
@@ -51,15 +49,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/login/**").permitAll().antMatchers("/login").permitAll()
-              .anyRequest().authenticated()
+                .anyRequest().authenticated()
                 .and().headers().cacheControl();
         httpSecurity.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         httpSecurity.exceptionHandling().authenticationEntryPoint(entryPointUnauthorizedHandler).accessDeniedHandler(restAccessDeniedHandler);
 
     }
+
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-}
+   }

@@ -43,7 +43,7 @@ public interface UserMapper {
 
     @Delete("delete from " + TABLE_NAME + " where id=#{id}")
     void delete(Long id);
-    @Select("select id,userName,password,nickName,state from " + TABLE_NAME + " where username=#{username}")
+    @Select("select id,userName,password,state from " + TABLE_NAME + " where username=#{username}")
     User  findByUserName(String username);
 
 
@@ -63,8 +63,8 @@ public interface UserMapper {
                         VALUES("username", "#{username}");
                     if (user.getPassword() != null)
                         VALUES("password", "#{password}");
-                    if (user.getNickName() != null)
-                        VALUES("nickName", "#{nickName}");
+                 /*   if (user.getNickName() != null)
+                        VALUES("nickName", "#{nickName}");*/
                     if (user.getCreatedUser() != null)
                         VALUES("created_User", "#{createdUser}");
                     if (user.getUpdatedUser() != null)
@@ -87,8 +87,8 @@ public interface UserMapper {
                         SET("username=#{username}");
                     if (user.getPassword() != null)
                         SET("password=#{password}");
-                    if (user.getNickName() != null)
-                        SET("nickName=#{nickName}");
+                   /* if (user.getNickName() != null)
+                        SET("nickName=#{nickName}");*/
                     if (user.getUpdatedUser() != null)
                         SET("updated_User=#{updatedUser}");
                     if (user.getRemark() != null)
@@ -118,11 +118,11 @@ public interface UserMapper {
                         WHERE("username = #{username}");
                         WHERE("password = #{password}");
                     }
-                    if (user.getNickName() != null) {
+               /*     if (user.getNickName() != null) {
                         WHERE("nickName like '%${nickName}'%");
 
 
-                    }
+                    }*/
                 }
             }.toString();
         }

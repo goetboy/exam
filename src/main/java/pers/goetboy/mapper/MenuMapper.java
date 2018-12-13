@@ -41,7 +41,7 @@ public interface MenuMapper {
      * @param userName
      * @return
      */
-    @Select("select * from " + Menu.TABLE_NAME + " m, " + RoleMenu.TABLE_NAME + " rm ," + RoleUser.TABLE_NAME + " ru," + User.TABLE_NAME + " u where m.id=rm.MENU_ID and rm.ROLE_ID=ru.ROLE_ID and ru.USER_ID=u.id and u.USERNAME = #{userName}")
+    @Select("select * from " + Menu.TABLE_NAME + " m, " + RoleMenu.TABLE_NAME + " rm ," + UserRole.TABLE_NAME + " ru," + User.TABLE_NAME + " u where m.id=rm.MENU_ID and rm.ROLE_ID=ru.ROLE_ID and ru.USER_ID=u.id and u.USERNAME = #{userName}")
     List<Menu> listByUserName(String userName);
 
     /**

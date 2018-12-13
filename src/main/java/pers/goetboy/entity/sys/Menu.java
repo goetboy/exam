@@ -1,5 +1,7 @@
 package pers.goetboy.entity.sys;
 
+import lombok.Data;
+import lombok.ToString;
 import pers.goetboy.entity.AbstractEntity;
 
 import javax.persistence.Column;
@@ -17,6 +19,8 @@ import java.util.List;
  */
 @Entity
 @Table(name = Menu.TABLE_NAME)
+@Data
+@ToString
 public class Menu extends AbstractEntity implements Serializable {
     public final static String TABLE_NAME = "sys_menu";
     /**
@@ -49,63 +53,4 @@ public class Menu extends AbstractEntity implements Serializable {
     @Transient
     private List<Role> roles;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
-    public Integer getParent() {
-        return parent;
-    }
-
-    public void setParent(Integer parent) {
-        this.parent = parent;
-    }
-
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-
-    @Override
-    public String toString() {
-        return "Menu{" +
-                "name='" + name + '\'' +
-                ", url='" + url + '\'' +
-                ", type=" + type +
-                ", parent=" + parent +
-                ", sort=" + sort +
-                ", roles=" + roles +
-                "} " + super.toString();
-    }
 }

@@ -1,5 +1,7 @@
 package pers.goetboy.services;
 
+import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pers.goetboy.entity.sys.Menu;
@@ -13,7 +15,7 @@ import java.util.List;
  * 菜单业务层
  */
 @Service
-public class MenuService extends AbstractService<Menu> {
+    public class MenuService extends AbstractService<Menu> {
     @Autowired
     MenuMapper menuMapper;
     @Autowired
@@ -21,7 +23,6 @@ public class MenuService extends AbstractService<Menu> {
     @Autowired
     RoleMapper roleMapper;
 
-    @Override
     public Menu get(Long id) {
         return menuMapper.get(id);
     }
@@ -31,12 +32,12 @@ public class MenuService extends AbstractService<Menu> {
      *
      * @return
      */
-    @Override
     public List<Menu> findAll() {
         List<Menu> menus = menuMapper.getAll();
         for (Menu menu : menus) {
             menu.setRoles(roleMapper.findByMenuId(menu.getId()));
         }
+
         return menus;
     }
 
@@ -47,8 +48,8 @@ public class MenuService extends AbstractService<Menu> {
      * @param menu
      * @return
      */
-    @Override
     public Long save(Menu menu) {
+
         Long id = menuMapper.dynamicInsert(menu);
         return id;
     }
@@ -58,7 +59,6 @@ public class MenuService extends AbstractService<Menu> {
      *
      * @param menu
      */
-    @Override
     public void update(Menu menu) {
         menuMapper.dynamicUpdate(menu);
 
@@ -69,7 +69,6 @@ public class MenuService extends AbstractService<Menu> {
      *
      * @param id
      */
-    @Override
     public void delete(Long id) {
         menuMapper.delete(id);
         roleMenuMapper.deleteByMenuId(id);

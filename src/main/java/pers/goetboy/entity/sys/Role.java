@@ -1,5 +1,7 @@
 package pers.goetboy.entity.sys;
 
+import lombok.Data;
+import lombok.ToString;
 import pers.goetboy.entity.AbstractEntity;
 
 import javax.persistence.Column;
@@ -14,6 +16,8 @@ import java.util.List;
  */
 @Entity
 @Table(name = Role.TABLE_NAME)
+@Data
+@ToString
 public class Role extends AbstractEntity implements Serializable {
     public  final  static String  TABLE_NAME = "sys_role";
     /**
@@ -27,27 +31,4 @@ public class Role extends AbstractEntity implements Serializable {
     @Transient
     private List<Menu> menus ;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Menu> getMenus() {
-        return menus;
-    }
-
-    public void setMenus(List<Menu> menus) {
-        this.menus = menus;
-    }
-
-    @Override
-    public String toString() {
-        return "Role{" +
-                "name='" + name + '\'' +
-                ", menus=" + menus +
-                "} " + super.toString();
-    }
 }

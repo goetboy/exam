@@ -1,14 +1,16 @@
 package pers.goetboy.services;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pers.goetboy.common.exception.service.ServiceTipsException;
+import pers.goetboy.entity.STATE_ENUM;
 import pers.goetboy.entity.sys.Menu;
 import pers.goetboy.entity.sys.Role;
 import pers.goetboy.entity.sys.RoleMenu;
 import pers.goetboy.mapper.RoleMapper;
 import pers.goetboy.mapper.RoleMenuMapper;
-import pers.goetboy.mapper.RoleUserMapper;
+import pers.goetboy.mapper.UserRoleMapper;
 
 import java.util.List;
 
@@ -17,7 +19,7 @@ public class RoleService extends AbstractService<Role> {
     @Autowired
     RoleMapper roleMapper;
     @Autowired
-    RoleUserMapper roleUserMapper;
+    UserRoleMapper userRoleMapper;
     @Autowired
     RoleMenuMapper roleMenuMapper;
 
@@ -26,12 +28,12 @@ public class RoleService extends AbstractService<Role> {
     }
 
     /**
-     * 查询所有
+     * 查询角色列表
      *
      * @return
      */
 
-    public List<Role> findAll() {
+    public List<Role> listRole() {
         return roleMapper.getAll();
     }
 
@@ -43,9 +45,9 @@ public class RoleService extends AbstractService<Role> {
      * @throws ServiceTipsException
      */
 
-    public Long save(Role role) throws ServiceTipsException {
-        Role o_role = roleMapper.getByName(role.getName());
-        if (o_role != null) {
+    public Long saveRole(Role role) throws ServiceTipsException {
+        Role existRole = roleMapper.getByName(role.getName());
+        if (existRole != null) {
             throw new ServiceTipsException("已经有同名角色存在");
         }
         Long id = roleMapper.dynamicInsert(role);
@@ -67,31 +69,57 @@ public class RoleService extends AbstractService<Role> {
      * @param role
      */
 
-    public void update(Role role) {
-        roleMenuMapper.deleteByRoleId(role.getId());
-        roleMapper.dynamicUpdate(role);
-        List<Menu> menus = role.getMenus();
-
-        if (menus != null && !menus.isEmpty()) {
-            for (Menu menu : menus) {
-                RoleMenu roleMenu = new RoleMenu();
-                roleMenu.setMenuId(menu.getId());
-                roleMenu.setRoleId(role.getId());
-                roleMenuMapper.dynamicInsert(roleMenu);
-            }
-
+    public void updateRole(Role role) throws ServiceTipsException {
+        Role oldRole = roleMapper.get(role.getId());
+        if (oldRole == null) {
+            throw new ServiceTipsException("没有找到角色");
         }
-
+        Role existRole = roleMapper.getByName(role.getName());
+        if (existRole != null) {
+            throw new ServiceTipsException("已经有同名角色存在");
+        }
+        oldRole.setName(role.getName());
+        oldRole.setRemark(role.getRemark());
+        roleMapper.dynamicUpdate(oldRole);
     }
 
     /**
-     * 查询用户下所有角色
-     *
-     * @param userId
-     * @return
+     * 更新角色菜单
      */
-    public List<Role> listRoleByUser(Long userId) {
-        return roleMapper.findByUserId(userId);
+    public void updateRoleMenu(Long roleId, List<Menu> menus) throws ServiceTipsException {
+        Role oldRole = roleMapper.get(roleId);
+        if (oldRole == null) {
+            throw new ServiceTipsException("没有找到角色");
+        }
+        roleMenuMapper.deleteByRoleId(roleId);
+        if (CollectionUtils.isNotEmpty(menus)) {
+            menus.forEach(menu -> {
+                RoleMenu roleMenu = new RoleMenu();
+                roleMenu.setMenuId(menu.getId());
+                roleMenu.setRoleId(roleId);
+                roleMenuMapper.dynamicInsert(roleMenu);
+            });
+
+        }
+    }
+    /**
+     * 更新角色状态
+     */
+    public void updateRoleState(Long roleId, Integer state) throws ServiceTipsException {
+        //如果传入状态不正确
+        if (state == null || STATE_ENUM.getByValue(state) == null) {
+            throw new ServiceTipsException("角色状态不正确");
+        }
+        Role oldRole = roleMapper.get(roleId);
+        if (oldRole == null) {
+            throw new ServiceTipsException("没有找到角色");
+        }
+        //如果状态相等,不执行更新
+        if (oldRole.getState().equals(state)) {
+            return;
+        }
+        oldRole.setState(state);
+        roleMapper.dynamicUpdate(oldRole);
     }
 
     /**
@@ -100,10 +128,13 @@ public class RoleService extends AbstractService<Role> {
      * @param id
      */
 
-    public void delete(Long id) {
-        roleMapper.delete(id);
-        roleUserMapper.deleteByRoleId(id);
+    public void deleteRole(Long id) {
+        //删除角色和菜单映射关系
         roleMenuMapper.deleteByRoleId(id);
+        //删除用户和角色映射关系
+        userRoleMapper.deleteByRoleId(id);
+        //删除角色
+        roleMapper.delete(id);
     }
 
 

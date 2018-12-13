@@ -11,7 +11,6 @@ import java.util.List;
 public class RoleMenuService extends AbstractService<RoleMenu> {
     @Autowired
     RoleMenuMapper roleMenuMapper;
-    @Override
     public RoleMenu get(Long id) {
         return roleMenuMapper.get(id);
     }
@@ -21,7 +20,6 @@ public class RoleMenuService extends AbstractService<RoleMenu> {
      *
      * @return
      */
-    @Override
     public  List<RoleMenu> findAll() {
         return roleMenuMapper.getAll();
     }
@@ -31,7 +29,6 @@ public class RoleMenuService extends AbstractService<RoleMenu> {
      * @param roleMenu
      * @return
      */
-    @Override
     public  Long save(RoleMenu roleMenu) {
         Long id = roleMenuMapper.dynamicInsert(roleMenu);
         return id;
@@ -41,7 +38,6 @@ public class RoleMenuService extends AbstractService<RoleMenu> {
      * 更新角色菜单映射信息
      * @param roleMenu
      */
-    @Override
     public   void update(RoleMenu roleMenu) {
         roleMenuMapper.dynamicUpdate(roleMenu);
     }
@@ -50,7 +46,6 @@ public class RoleMenuService extends AbstractService<RoleMenu> {
      * 删除角色菜单映射信息
      * @param id
      */
-    @Override
     public  void delete(Long id) {
         roleMenuMapper.delete(id);
     }

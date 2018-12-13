@@ -1,5 +1,8 @@
 package pers.goetboy.entity;
 
+import lombok.Data;
+import lombok.ToString;
+
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
@@ -12,6 +15,8 @@ import java.sql.Timestamp;
  * 实体顶级属性
  */
 @Entity
+@Data
+@ToString
 public class AbstractEntity implements Serializable {
     @Id
     @Column(name = "id")
@@ -27,7 +32,7 @@ public class AbstractEntity implements Serializable {
     /**
      * 创建时间
      */
-    @Column(name = "created_time")
+    @Column(name = "created_Time")
     private Timestamp createdTime;
     /**
      * 更新时间
@@ -52,72 +57,4 @@ public class AbstractEntity implements Serializable {
     @Column(name = "state")
     private Integer state;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getCreatedUser() {
-        return createdUser;
-    }
-
-    public void setCreatedUser(Integer createdUser) {
-        this.createdUser = createdUser;
-    }
-
-    public Timestamp getCreatedTime() {
-        return createdTime;
-    }
-
-    public void setCreatedTime(Timestamp createdTime) {
-        this.createdTime = createdTime;
-    }
-
-    public Timestamp getUpdatedTime() {
-        return updatedTime;
-    }
-
-    public void setUpdatedTime(Timestamp updatedTime) {
-        this.updatedTime = updatedTime;
-    }
-
-    public Integer getUpdatedUser() {
-        return updatedUser;
-    }
-
-    public void setUpdatedUser(Integer updatedUser) {
-        this.updatedUser = updatedUser;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
-
-    @Override
-    public String toString() {
-        return "AbstractEntity{" +
-                "id=" + id +
-                ", createdUser=" + createdUser +
-                ", createdTime=" + createdTime +
-                ", updatedTime=" + updatedTime +
-                ", updatedUser=" + updatedUser +
-                ", remark='" + remark + '\'' +
-                ", state=" + state +
-                '}';
-    }
 }

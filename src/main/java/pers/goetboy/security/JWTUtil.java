@@ -3,8 +3,8 @@ package pers.goetboy.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.hibernate.service.spi.ServiceException;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -18,12 +18,8 @@ public class JWTUtil {
 
     private static final String CLAIM_KEY_USER_ACCOUNT = "sub";
     private static final String CLAIM_KEY_CREATED = "created";
-
-    @Value("${jwt.secret}")
-    private String secret; //秘钥
-
-    @Value("${jwt.expiration}")
-    private Long expiration; //过期时间
+    @Autowired
+    JWTConfig jwtConfig;
 
     /**
      * 从token中获取用户
@@ -86,7 +82,7 @@ public class JWTUtil {
         Claims claims;
         try {
             claims = Jwts.parser()
-                    .setSigningKey(secret)
+                    .setSigningKey(jwtConfig.getSecret())
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
@@ -101,7 +97,7 @@ public class JWTUtil {
      * @return
      */
     private Date generateExpirationDate() {
-        return new Date(System.currentTimeMillis() + expiration * 1000);
+        return new Date(System.currentTimeMillis() + jwtConfig.getExpiration() * 1000);
     }
 
     /**
@@ -134,7 +130,7 @@ public class JWTUtil {
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(generateExpirationDate())
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret())
                 .compact();
     }
 
@@ -145,7 +141,6 @@ public class JWTUtil {
      * @return
      */
     public Boolean canTokenBeRefreshed(String token) {
-        final Date created = getCreatedDateFromToken(token);
         return !isTokenExpired(token);
     }
 
@@ -164,8 +159,6 @@ public class JWTUtil {
             final Claims claims = getClaimsFromToken(token);
             claims.put(CLAIM_KEY_CREATED, new Date());
             refreshedToken = generateToken(claims);
-
-
         } catch (Exception e) {
             refreshedToken = null;
         }
@@ -180,14 +173,11 @@ public class JWTUtil {
      * @return
      */
     public Boolean validateToken(String token, UserDetails userDetails) {
+        return userDetails.getUsername().equals(getUserAccountFromToken(token)) && !isTokenExpired(token);
+    }
 
-        final String useraccount = getUserAccountFromToken(token);
-        final Date created = getCreatedDateFromToken(token);
-        Boolean result = (
-                useraccount.equals(userDetails.getUsername())
-                        && !isTokenExpired(token)
-        );
-        return result;
+    public JWTConfig getJwtConfig() {
+        return this.jwtConfig;
     }
 }
 

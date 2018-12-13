@@ -1,5 +1,9 @@
 package pers.goetboy.entity.sys;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.ToString;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,29 +23,28 @@ import java.util.List;
  */
 @Entity
 @Table(name = User.TABLE_NAME)
+@Data
+@ToString
 public class User extends AbstractEntity implements UserDetails {
-    public   final  static String  TABLE_NAME = "sys_user";
+    public final static String TABLE_NAME = "sys_user";
     /**
      * 用户名
      */
     @Column(name = "userName")
-    private  String username;
+    private String username;
     /**
      * 密码
      */
     @Column(name = "password")
-    private  String password;
-
+    private String password;
+    @Transient
+    private List<Role> roles;
     /**
-     * 昵称
-     */
-    @Column(name = "nickName")
-    private  String nickName;
-    /**
-     * 用户角色
+     * 用户菜单权限
      */
     @Transient
-    private  List<Role> roles;
+    private List<Menu> menus;
+
     public User() {
     }
 
@@ -57,91 +60,50 @@ public class User extends AbstractEntity implements UserDetails {
         this.password = password;
     }
 
-    /**
-     * 用户菜单权限
-     */
-    @Transient
-    private List<Menu> menus;
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-
-    public List<Menu> getMenus() {
-        return menus;
-    }
-
-    public void setMenus(List<Menu> menus) {
-        this.menus = menus;
-    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> auths = new ArrayList<>();
         List<Role> roles = this.getRoles();
-        for (Role role : roles) {
-            auths.add(new SimpleGrantedAuthority(role.getName()));
+        if (CollectionUtils.isNotEmpty(roles)) {
+            for (Role role : roles) {
+                auths.add(new SimpleGrantedAuthority(role.getName()));
+            }
         }
         return auths;
     }
 
+    @JsonIgnore
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+    @Override
+    public String getUsername() {
+        return this.username;
+    }
 
-
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;
     }
-    @Override
-    public String toString() {
-        return "User{" +
-                "userName='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", nickName='" + nickName + '\'' +
-                ", roles=" + roles +
-                ", menus=" + menus +
-                "} " + super.toString();
-    }
+
 }

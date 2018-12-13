@@ -8,7 +8,7 @@ import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 import pers.goetboy.entity.sys.Role;
 import pers.goetboy.entity.sys.RoleMenu;
-import pers.goetboy.entity.sys.RoleUser;
+import pers.goetboy.entity.sys.UserRole;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public interface RoleMapper {
      */
     @Delete("delete from " + Role.TABLE_NAME + " where id=#{id}")
     public void delete(Long id);
-    @Select("select t.name from "+Role.TABLE_NAME+" t where t.id in (select t1.role_id from "+ RoleUser.TABLE_NAME+ " t1 where  t1.user_id=#{userId}) ")
+    @Select("select t.name from "+Role.TABLE_NAME+" t where t.id in (select t1.role_id from "+ UserRole.TABLE_NAME+ " t1 where  t1.user_id=#{userId}) ")
     public List<Role> findByUserId(Long userId);
 
     /**

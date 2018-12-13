@@ -2,21 +2,15 @@ package pers.goetboy.services;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import pers.goetboy.common.exception.service.ServiceTipsException;
+import pers.goetboy.entity.STATE_ENUM;
 import pers.goetboy.entity.sys.Role;
-import pers.goetboy.entity.sys.RoleUser;
 import pers.goetboy.entity.sys.User;
-import pers.goetboy.mapper.RoleUserMapper;
+import pers.goetboy.entity.sys.UserRole;
+import pers.goetboy.mapper.RoleMapper;
 import pers.goetboy.mapper.UserMapper;
+import pers.goetboy.mapper.UserRoleMapper;
 import pers.goetboy.security.JWTUtil;
 import pers.goetboy.utils.DataBus;
 
@@ -30,52 +24,27 @@ import java.util.*;
 public class UserService {
     @Autowired
     UserMapper userMapper;
-    RoleUserMapper roleUserMapper;
-    private AuthenticationManager authenticationManager;
-    private UserDetailsService userDetailsService;
-    private JWTUtil jwtUtil;
-    private LoginRepository loginRepository;
-
     @Autowired
-    public UserService(AuthenticationManager authenticationManager, @Qualifier("jwtUserDetail") UserDetailsService userDetailsService, JWTUtil jwtUtil, LoginRepository loginRepository) {
-        this.authenticationManager = authenticationManager;
-        this.userDetailsService = userDetailsService;
-        this.jwtUtil = jwtUtil;
-        this.loginRepository = loginRepository;
-    }
-
+    UserRoleMapper roleUserMapper;
+    @Autowired
+    RoleMapper roleMapper;
 
     public User get(Long id) {
         return userMapper.get(id);
     }
 
     /**
-     * 查询所有
-     *
-     * @return
+     * 获取用户列表
      */
-    public List<User> findAll() {
-        return userMapper.getAll();
-    }
-
-    /**
-     * 保存用户信息和用户对应的角色信息
-     *
-     * @param user
-     */
-    public Long save(User user) {
-
-        Long id = userMapper.dynamicInsert(encodePassword(user));
-
-        List<Role> roles = user.getRoles();
-        if (roles != null) {
-            RoleUser roleUser = new RoleUser();
-            roleUser.setRoleId(roles.get(0).getId());
-            roleUser.setUserId(id);
-            roleUserMapper.dynamicInsert(roleUser);
+    public List<User> listUser() {
+        List<User> users = userMapper.getAll();
+        if (CollectionUtils.isEmpty(users)) {
+            return null;
         }
-
-        return id;
+        users.forEach(user -> {
+            user.setRoles(roleMapper.findByUserId(user.getId()));
+        });
+        return users;
     }
 
     /**
@@ -84,36 +53,48 @@ public class UserService {
      * @param user 用户信息
      */
 
-    public void updateUser(User user) {
-
-
-        userMapper.dynamicUpdate(encodePassword(user));
-
-        List<Role> roles = user.getRoles();
-        if (CollectionUtils.isNotEmpty(roles)) {
-            roleUserMapper.deleteByUserId(user.getId());
-            RoleUser roleUser = new RoleUser();
-            roleUser.setRoleId(roles.get(0).getId());
-            roleUser.setUserId(user.getId());
-            roleUserMapper.dynamicInsert(roleUser);
+    public void updateUser(User user) throws ServiceTipsException {
+        User oldUser = userMapper.get(user.getId());
+        if (oldUser == null) {
+            throw new ServiceTipsException("用户未找到");
         }
-
+        oldUser.setRemark(user.getRemark());
+        userMapper.dynamicUpdate(oldUser);
     }
 
     /**
-     * 更新用户密码
+     * 更新用户角色信息
      *
-     * @param id       用户id
-     * @param password 密码
-     * @throws ServiceTipsException
+     * @param userId 用户id
+     * @param roles  角色信息
      */
-    public void updatePassword(Long id, String password) throws ServiceTipsException {
-        User user = userMapper.get(id);
-        if (user == null) {
-            throw new ServiceTipsException("找不到对应的用户信息");
+    public void updateUserRole(long userId, List<Role> roles) {
+
+        List<Role> oldRoles = roleMapper.findByUserId(userId);
+        //过滤已有角色信息
+        if (CollectionUtils.isNotEmpty(oldRoles) && CollectionUtils.isNotEmpty(roles)) {
+            roles.forEach(role -> {
+                oldRoles.forEach(oldRole -> {
+                    if (oldRole.getId().equals(role.getId())) {
+                        oldRoles.remove(role);
+                    }
+                });
+            });
         }
-        user.setPassword(password);
-        userMapper.dynamicUpdate(encodePassword(user));
+        //删除不在存在的角色信息
+        if (CollectionUtils.isNotEmpty(oldRoles)) {
+            oldRoles.forEach(role -> {
+                roleUserMapper.deleteByUserIdAndRoleId(userId, role.getId());
+            });
+        }
+        //添加新的角色信息
+        if (CollectionUtils.isNotEmpty(roles)) {
+            UserRole roleUser = new UserRole();
+            roleUser.setRoleId(roles.get(0).getId());
+            roleUser.setUserId(userId);
+            roleUserMapper.dynamicInsert(roleUser);
+        }
+
     }
 
     /**
@@ -121,74 +102,29 @@ public class UserService {
      *
      * @param id 用户id
      */
-
     public void deleteUser(Long id) {
+        //删除用户信息
         userMapper.delete(id);
+        //删除角色信息
         roleUserMapper.deleteByUserId(id);
     }
 
-    /**
-     * 登陆
-     *
-     * @param username 用户名
-     * @param password 密码
-     * @return token
-     */
-    public String login(String username, String password) {
-
-
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-        String token = jwtUtil.generateToken(userDetails);
-        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
-        Authentication authentication = authenticationManager.authenticate(upToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return token;
-    }
-
-    /**
-     * 注册用户
-     *
-     * @param user
-     * @return
-     */
-    public String register(User user) {
-        String username = user.getUsername();
-        if (loginRepository.findByUsername(username) != null) {
-            return "用户已存在";
+    public void updateUserState(Long userId, Integer state) throws ServiceTipsException {
+        //如果传入状态不正确
+        if (state == null || STATE_ENUM.getByValue(state) == null) {
+            throw new ServiceTipsException("用户状态不正确");
         }
-
-        save(user);
-
-        return "success";
+        User user = userMapper.get(userId);
+        //如果用户没找到
+        if (user == null) {
+            throw new ServiceTipsException("用户未找到");
+        }
+        //如果状态相等,不执行更新
+        if (user.getState().equals(state)) {
+            return;
+        }
+        user.setState(state);
+        userMapper.dynamicUpdate(user);
     }
 
-    /**
-     * 登出
-     */
-    public void loginOut() {
-        SecurityContextHolder.clearContext();
-    }
-
-    /**
-     * 刷新token
-     *
-     * @param oldToken
-     * @return
-     */
-    public String refreshToken(String oldToken) {
-        String token = oldToken.substring("Bearer ".length());
-        return jwtUtil.refreshToken(token);
-    }
-
-    /**
-     * 加密用户密码
-     *
-     * @param user
-     */
-    private User encodePassword(User user) {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        return user;
-    }
 }

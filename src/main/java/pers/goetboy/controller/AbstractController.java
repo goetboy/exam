@@ -8,14 +8,12 @@ import org.springframework.web.servlet.View;
 import pers.goetboy.entity.sys.User;
 
 public class AbstractController {
-    private  User user = null;
+
     protected User getUser() {
-        if (user == null) {
-            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            user = new User();
-            user.setUsername(userDetails.getUsername());
-            user.setPassword(userDetails.getPassword());
-        }
+        final User user = new User();
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        user.setUsername(userDetails.getUsername());
+        user.setPassword(userDetails.getPassword());
         return user;
     }
 
@@ -29,7 +27,7 @@ public class AbstractController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setStatus(status);
         modelAndView.addObject(object);
-
+        
         return modelAndView;
     }
 
@@ -54,8 +52,6 @@ public class AbstractController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setStatus(status);
         modelAndView.setViewName(viewName);
-
-
         return modelAndView;
     }
 
