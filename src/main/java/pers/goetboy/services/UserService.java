@@ -2,6 +2,9 @@ package pers.goetboy.services;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pers.goetboy.common.exception.service.ServiceTipsException;
 import pers.goetboy.entity.STATE_ENUM;
@@ -20,17 +23,21 @@ import java.util.*;
  * @author goetb
  * @date 2018年12月6日 11点08分
  */
-@Service
-public class UserService {
+@Service("jwtUserDetail")
+public class UserService implements UserDetailsService {
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
     @Autowired
-    UserRoleMapper roleUserMapper;
+    private UserRoleMapper roleUserMapper;
     @Autowired
-    RoleMapper roleMapper;
+    private RoleMapper roleMapper;
 
     public User get(Long id) {
         return userMapper.get(id);
+    }
+
+    public Long saveUser(User user) {
+        return userMapper.dynamicInsert(user);
     }
 
     /**
@@ -127,4 +134,24 @@ public class UserService {
         userMapper.dynamicUpdate(user);
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userMapper.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
+        } else {
+            user.setRoles(loadUserRoles(user.getId()));
+            return user;
+        }
+    }
+
+    public List<Role> loadUserRoles(Long userId) {
+        List<Role> roles = roleMapper.findByUserId(userId);
+        if (roles == null || roles.isEmpty()) {
+            return null;
+        } else {
+            return roles;
+        }
+
+    }
 }

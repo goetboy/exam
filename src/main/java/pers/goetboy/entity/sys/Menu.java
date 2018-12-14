@@ -1,6 +1,8 @@
 package pers.goetboy.entity.sys;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import pers.goetboy.entity.AbstractEntity;
 
@@ -19,8 +21,9 @@ import java.util.List;
  */
 @Entity
 @Table(name = Menu.TABLE_NAME)
-@Data
-@ToString
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class Menu extends AbstractEntity implements Serializable {
     public final static String TABLE_NAME = "sys_menu";
     /**

@@ -16,7 +16,6 @@ import pers.goetboy.services.UserService;
 public class LoginController {
 
 	@Autowired
-	@Qualifier("jwtUserDetail")
 	private LoginRepository loginRepository;
 
 	/**

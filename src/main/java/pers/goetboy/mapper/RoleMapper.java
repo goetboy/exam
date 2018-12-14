@@ -44,7 +44,7 @@ public interface RoleMapper {
      */
     @Delete("delete from " + Role.TABLE_NAME + " where id=#{id}")
     public void delete(Long id);
-    @Select("select t.name from "+Role.TABLE_NAME+" t where t.id in (select t1.role_id from "+ UserRole.TABLE_NAME+ " t1 where  t1.user_id=#{userId}) ")
+    @Select("select t.* from "+Role.TABLE_NAME+" t where t.id in (select t1.role_id from "+ UserRole.TABLE_NAME+ " t1 where  t1.user_id=#{userId}) ")
     public List<Role> findByUserId(Long userId);
 
     /**
@@ -52,7 +52,7 @@ public interface RoleMapper {
      * @param menuId
      * @return
      */
-    @Select("select t.name from "+Role.TABLE_NAME+" t where t.id in (select t1.role_id from "+ RoleMenu.TABLE_NAME+ " t1 where  t1.menu_id=#{menuId}) ")
+    @Select("select t.* from "+Role.TABLE_NAME+" t where t.id in (select t1.role_id from "+ RoleMenu.TABLE_NAME+ " t1 where  t1.menu_id=#{menuId}) ")
     public List<Role> findByMenuId(Long menuId);
     class RoleMapperProvider {
         /**

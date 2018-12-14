@@ -2,6 +2,8 @@ package pers.goetboy.entity.sys;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,8 +25,9 @@ import java.util.List;
  */
 @Entity
 @Table(name = User.TABLE_NAME)
-@Data
-@ToString
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class User extends AbstractEntity implements UserDetails {
     public final static String TABLE_NAME = "sys_user";
     /**
@@ -37,6 +40,15 @@ public class User extends AbstractEntity implements UserDetails {
      */
     @Column(name = "password")
     private String password;
+    @Column(name = "name")
+    private  String name;
+    @Column(name = "phone")
+    private  String phone;
+    @Column(name = "address")
+    private  String address;
+    @Column(name = "email")
+    private String email;
+
     @Transient
     private List<Role> roles;
     /**

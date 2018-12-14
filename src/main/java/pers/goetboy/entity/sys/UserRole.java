@@ -1,6 +1,8 @@
 package pers.goetboy.entity.sys;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import pers.goetboy.entity.AbstractEntity;
 
@@ -14,8 +16,9 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = UserRole.TABLE_NAME)
-@Data
-@ToString
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class UserRole extends AbstractEntity implements Serializable {
     public final static String TABLE_NAME = "sys_user_role";
     /**

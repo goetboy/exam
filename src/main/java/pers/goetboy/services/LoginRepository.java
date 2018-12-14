@@ -26,116 +26,92 @@ import java.util.List;
  * @author:goetboy;
  * @date 2018 /12 /06
  **/
-@Component("jwtUserDetail")
-public class LoginRepository implements UserDetailsService {
-	@Autowired
-	UserMapper userMapper;
+@Service
+public class LoginRepository {
+    @Autowired
+    UserMapper userMapper;
+    @Autowired
+    AuthenticationManager authenticationManager;
+    @Autowired
+    JWTUtil jwtUtil;
+    @Autowired
+    RoleMapper roleMapper;
 
-	@Autowired
-	JWTUtil jwtUtil;
-	@Autowired
-	RoleMapper roleMapper;
 
-	public User findByUsername(String username) {
-		User user = userMapper.findByUserName(username);
-		return user;
-	}
+    /**
+     * 登陆
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @return token
+     */
+    public String login(String username, String password) {
 
-	public User getcurrentUser() {
-		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return this.findByUsername(userDetails.getUsername());
-	}
+        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
+        Authentication authentication = authenticationManager.authenticate(upToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserDetails userDetails = userMapper.findByUsername(username);
+        String token = jwtUtil.generateToken(userDetails);
+        return token;
+    }
 
-	/**
-	 * 登陆
-	 *
-	 * @param username 用户名
-	 * @param password 密码
-	 * @return token
-	 */
-	public String login(String username, String password) {
+    /**
+     * 注册用户
+     *
+     * @param user
+     * @return
+     */
+    public void register(User user) throws ServiceTipsException {
+        String username = user.getUsername();
+        if (userMapper.findByUsername(username) != null) {
+            throw new ServiceTipsException("用户已存在");
+        }
+        userMapper.dynamicInsert(encodePassword(user));
+    }
 
-	//	UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
-	//	Authentication authentication = authenticationManager.authenticate(upToken);
-	//	SecurityContextHolder.getContext().setAuthentication(authentication);
-		UserDetails userDetails = findByUsername(username);
-		String token = jwtUtil.generateToken(userDetails);
-		return token;
-	}
+    /**
+     * 登出
+     */
+    public void loginOut() {
+        SecurityContextHolder.clearContext();
+    }
 
-	/**
-	 * 注册用户
-	 *
-	 * @param user
-	 * @return
-	 */
-	public void register(User user) throws ServiceTipsException {
-		String username = user.getUsername();
-		if (findByUsername(username) != null) {
-			throw new ServiceTipsException("用户已存在");
-		}
+    /**
+     * 刷新token
+     *
+     * @param oldToken
+     * @return
+     */
+    public String refreshToken(String oldToken) {
+        String token = oldToken.substring(jwtUtil.getJwtConfig().getHeader().length());
+        return jwtUtil.refreshToken(token);
+    }
 
-		userMapper.dynamicInsert(encodePassword(user));
-	}
+    public User getcurrentUser() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
 
-	/**
-	 * 登出
-	 */
-	public void loginOut() {
-		SecurityContextHolder.clearContext();
-	}
+    /**
+     * 加密用户密码
+     *
+     * @param password
+     */
+    private String encodePassword(String password) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-	/**
-	 * 刷新token
-	 *
-	 * @param oldToken
-	 * @return
-	 */
-	public String refreshToken(String oldToken) {
-		String token = oldToken.substring(jwtUtil.getJwtConfig().getHeader().length());
-		return jwtUtil.refreshToken(token);
-	}
+        return bCryptPasswordEncoder.encode(password);
+    }
 
-	/**
-	 * 加密用户密码
-	 *
-	 * @param password
-	 */
-	private String encodePassword(String password) {
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    /**
+     * 加密用户密码
+     *
+     * @param user
+     */
+    private User encodePassword(User user) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        return user;
+    }
 
-		return bCryptPasswordEncoder.encode(password);
-	}
 
-	/**
-	 * 加密用户密码
-	 *
-	 * @param user
-	 */
-	private User encodePassword(User user) {
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		return user;
-	}
-
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = findByUsername(username);
-		if (user == null) {
-			throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
-		} else {
-			user.setRoles(loadUserRoles(user.getId()));
-			return user;
-		}
-	}
-
-	public List<Role> loadUserRoles(Long userId) {
-		List<Role> roles = roleMapper.findByUserId(userId);
-		if (roles == null || roles.isEmpty()) {
-			return null;
-		} else {
-			return roles;
-		}
-
-	}
 }

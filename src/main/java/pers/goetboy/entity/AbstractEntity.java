@@ -1,6 +1,8 @@
 package pers.goetboy.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -10,13 +12,15 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * 实体顶级属性
  */
 @Entity
-@Data
-@ToString
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class AbstractEntity implements Serializable {
     @Id
     @Column(name = "id")
@@ -27,22 +31,22 @@ public class AbstractEntity implements Serializable {
      */
     //@NotNull(message = "{table.createUser.notnull}")
     //@Max(value = 10,message = "{table.createUser.max}")
-    @Column(name = "created_User")
+    @Column(name = "CREATED_USER")
     private Integer createdUser;
     /**
      * 创建时间
      */
-    @Column(name = "created_Time")
-    private Timestamp createdTime;
+    @Column(name = "CREATED_TIME")
+    private Date createdTime;
     /**
      * 更新时间
      */
-    @Column(name = "updated_Time")
-    private Timestamp updatedTime;
+    @Column(name = "UPDATED_TIME")
+    private Date updatedTime;
     /**
      * 更新人
      */
-    @Column(name = "updated_User")
+    @Column(name = "UPDATED_USER")
     private Integer updatedUser;
 
     /**
