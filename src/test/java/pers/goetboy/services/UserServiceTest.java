@@ -29,7 +29,7 @@ public class UserServiceTest extends BaseTest {
         user.setPassword("123456");
         user.setCreatedUser(1);
         user.setState(1);
-        userService.save(user);
+        //userService.(user);
         userService.listUser().forEach(user1 -> System.out.println(user1));
     }
     @Test
@@ -40,7 +40,7 @@ public class UserServiceTest extends BaseTest {
         user.setPassword("test");
         user.setState(1);
 
-        userService.updateUser(user);
+      //  userService.updateUser(user);
         User user1 =userService.get(3L);
         System.out.println(user1);
     }
@@ -52,7 +52,7 @@ public class UserServiceTest extends BaseTest {
     }
     @Test
     public void testLogin(){
-        userService.login("admin","123456");
+    //    userService.login("admin","123456");
     }
 
 }

@@ -35,6 +35,7 @@ public class ExceptionAdvice  {
             msg="操作异常";
         }
         response.setStatus(500);
+        response.setCharacterEncoding("UTF-8");
         response.getWriter().write(msg);
     }
 }
