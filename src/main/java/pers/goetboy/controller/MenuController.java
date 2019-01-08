@@ -1,9 +1,9 @@
 package pers.goetboy.controller;
 
+import com.goetboy.exception.service.BaseServiceTipsMsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import pers.goetboy.common.exception.service.ServiceTipsException;
 import pers.goetboy.entity.sys.Menu;
 import pers.goetboy.services.MenuService;
 
@@ -41,7 +41,7 @@ public class MenuController extends AbstractController {
 	 * @param menu 菜单信息
 	 */
 	@PostMapping(value = "/update")
-	public void update(Menu menu) throws ServiceTipsException {
+	public void update(@RequestBody Menu menu) throws BaseServiceTipsMsgException {
 		menuService.updateMenu(menu);
 	}
 
@@ -51,7 +51,7 @@ public class MenuController extends AbstractController {
 	 * @param menuId 菜单id
 	 */
 	@PostMapping(value = "/delete")
-	public void delete(Long menuId) {
+	public void delete(@RequestBody Long menuId) {
 		menuService.deleteMenu(menuId);
 	}
 
@@ -60,11 +60,11 @@ public class MenuController extends AbstractController {
 	 *
 	 * @param menuId 用户id
 	 * @param state  菜单状态 0停用 1正常
-	 * @throws ServiceTipsException
+	 * @throws BaseServiceTipsMsgException
 	 * 异常信息
 	 */
 	@PostMapping(value = "/update/state")
-	public void updateUserState(Long menuId, Integer state) throws ServiceTipsException {
+	public void updateUserState(@RequestBody Long menuId,@RequestBody Integer state) throws BaseServiceTipsMsgException {
 		menuService.updateMenuState(menuId, state);
 	}
 }

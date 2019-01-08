@@ -1,9 +1,10 @@
 package pers.goetboy.services;
 
+import com.goetboy.exception.service.BaseServiceTipsMsgException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pers.goetboy.common.exception.service.ServiceTipsException;
+
 import pers.goetboy.entity.STATE_ENUM;
 import pers.goetboy.entity.sys.Menu;
 import pers.goetboy.entity.sys.Role;
@@ -42,13 +43,13 @@ public class RoleService extends AbstractService<Role> {
 	 *
 	 * @param role
 	 * @return
-	 * @throws ServiceTipsException
+	 * @throws BaseServiceTipsMsgException
 	 */
 
-	public Long saveRole(Role role) throws ServiceTipsException {
+	public Long saveRole(Role role) throws BaseServiceTipsMsgException {
 		Role existRole = roleMapper.getByName(role.getName());
 		if (existRole != null) {
-			throw new ServiceTipsException("已经有同名角色存在");
+			throw new BaseServiceTipsMsgException("已经有同名角色存在");
 		}
 		Long id = roleMapper.dynamicInsert(role);
 		List<Menu> menus = role.getMenus();
@@ -69,14 +70,14 @@ public class RoleService extends AbstractService<Role> {
 	 * @param role
 	 */
 
-	public void updateRole(Role role) throws ServiceTipsException {
+	public void updateRole(Role role) throws BaseServiceTipsMsgException {
 		Role oldRole = roleMapper.get(role.getId());
 		if (oldRole == null) {
-			throw new ServiceTipsException("没有找到角色");
+			throw new BaseServiceTipsMsgException("没有找到角色");
 		}
 		Role existRole = roleMapper.getByName(role.getName());
 		if (existRole != null) {
-			throw new ServiceTipsException("已经有同名角色存在");
+			throw new BaseServiceTipsMsgException("已经有同名角色存在");
 		}
 		oldRole.setName(role.getName());
 		oldRole.setRemark(role.getRemark());
@@ -86,10 +87,10 @@ public class RoleService extends AbstractService<Role> {
 	/**
 	 * 更新角色菜单
 	 */
-	public void updateRoleMenu(Long roleId, List<Menu> menus) throws ServiceTipsException {
+	public void updateRoleMenu(Long roleId, List<Menu> menus) throws BaseServiceTipsMsgException {
 		Role oldRole = roleMapper.get(roleId);
 		if (oldRole == null) {
-			throw new ServiceTipsException("没有找到角色");
+			throw new BaseServiceTipsMsgException("没有找到角色");
 		}
 		roleMenuMapper.deleteByRoleId(roleId);
 		if (CollectionUtils.isNotEmpty(menus)) {
@@ -106,14 +107,14 @@ public class RoleService extends AbstractService<Role> {
 	/**
 	 * 更新角色状态
 	 */
-	public void updateRoleState(Long roleId, Integer state) throws ServiceTipsException {
+	public void updateRoleState(Long roleId, Integer state) throws BaseServiceTipsMsgException {
 		//如果传入状态不正确
 		if (state == null || STATE_ENUM.getByValue(state) == null) {
-			throw new ServiceTipsException("角色状态不正确");
+			throw new BaseServiceTipsMsgException("角色状态不正确");
 		}
 		Role oldRole = roleMapper.get(roleId);
 		if (oldRole == null) {
-			throw new ServiceTipsException("没有找到角色");
+			throw new BaseServiceTipsMsgException("没有找到角色");
 		}
 		//如果状态相等,不执行更新
 		if (oldRole.getState().equals(state)) {

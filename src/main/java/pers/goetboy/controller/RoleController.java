@@ -1,13 +1,9 @@
 package pers.goetboy.controller;
 
+import com.goetboy.exception.service.BaseServiceTipsMsgException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import pers.goetboy.common.exception.service.ServiceTipsException;
+import org.springframework.web.bind.annotation.*;
 import pers.goetboy.entity.sys.Menu;
-import pers.goetboy.entity.sys.Role;
 import pers.goetboy.entity.sys.Role;
 import pers.goetboy.services.RoleService;
 
@@ -42,10 +38,11 @@ public class RoleController {
      * 更新用户信息
      * 可更新 name 字段
      * 可更新 remark字段
+     *
      * @param role 用户信息
      */
     @PostMapping(value = "/update")
-    public void update(Role role) throws ServiceTipsException {
+    public void update(@RequestBody Role role) throws BaseServiceTipsMsgException {
         roleService.updateRole(role);
     }
 
@@ -55,7 +52,7 @@ public class RoleController {
      * @param roleId 用户id
      */
     @PostMapping(value = "/delete")
-    public void delete(Long roleId) {
+    public void delete(@RequestBody Long roleId) {
         roleService.deleteRole(roleId);
     }
 
@@ -66,7 +63,7 @@ public class RoleController {
      * @param menus  角色信息
      */
     @PostMapping(value = "/update/menu")
-    public void updateRoleMenu(Long roleId, List<Menu> menus) throws ServiceTipsException {
+    public void updateRoleMenu(@RequestBody Long roleId,@RequestBody List<Menu> menus) throws BaseServiceTipsMsgException {
         roleService.updateRoleMenu(roleId, menus);
     }
 
@@ -75,10 +72,10 @@ public class RoleController {
      *
      * @param RoleId 用户id
      * @param state  用户状态 0停用 1正常
-     * @throws ServiceTipsException
+     * @throws BaseServiceTipsMsgException
      */
     @PostMapping(value = "/update/state")
-    public void updateRoleState(Long RoleId, Integer state) throws ServiceTipsException {
+    public void updateRoleState(@RequestBody Long RoleId,@RequestBody Integer state) throws BaseServiceTipsMsgException {
         roleService.updateRoleState(RoleId, state);
     }
 }

@@ -1,11 +1,13 @@
 package pers.goetboy.common.advice;
 
+import com.goetboy.exception.service.BaseServiceTipsMsgException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import pers.goetboy.common.exception.service.ServiceTipsException;
+
+import pers.goetboy.services.BaseService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,7 +15,7 @@ import java.io.IOException;
 
 @ControllerAdvice
 @Log4j2
-public class ExceptionAdvice  {
+public class ExceptionAdvice {
     /**
      * 统一异常处理
      * @param ex
@@ -28,7 +30,7 @@ public class ExceptionAdvice  {
         log.error("===========================");
         //TODO 还可以使用ResponseEntity 未测试
         String msg="";
-        if(ex instanceof ServiceTipsException)
+        if(ex instanceof BaseServiceTipsMsgException)
         {
             msg=ex.getMessage();
         }else if(ex instanceof Exception){

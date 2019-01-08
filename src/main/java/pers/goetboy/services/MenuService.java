@@ -1,10 +1,11 @@
 package pers.goetboy.services;
 
+import com.goetboy.exception.service.BaseServiceTipsMsgException;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pers.goetboy.common.exception.service.ServiceTipsException;
+
 import pers.goetboy.entity.STATE_ENUM;
 import pers.goetboy.entity.sys.Menu;
 import pers.goetboy.entity.sys.Role;
@@ -57,10 +58,10 @@ public class MenuService extends AbstractService<Menu> {
 	 *
 	 * @param menu
 	 */
-	public void updateMenu(Menu menu) throws ServiceTipsException {
+	public void updateMenu(Menu menu) throws BaseServiceTipsMsgException {
 		Menu oldMenu = menuMapper.get(menu.getId());
 		if (oldMenu == null) {
-			throw new ServiceTipsException("没有找到菜单");
+			throw new BaseServiceTipsMsgException("没有找到菜单");
 		}
 		oldMenu.setUrl(menu.getUrl());
 		oldMenu.setName(menu.getName());
@@ -84,14 +85,14 @@ public class MenuService extends AbstractService<Menu> {
 	/**
 	 * 更新菜单状态
 	 */
-	public void updateMenuState(Long menuId, Integer state) throws ServiceTipsException {
+	public void updateMenuState(Long menuId, Integer state) throws BaseServiceTipsMsgException {
 		//如果传入状态不正确
 		if (state == null || STATE_ENUM.getByValue(state) == null) {
-			throw new ServiceTipsException("菜单状态不正确");
+			throw new BaseServiceTipsMsgException("菜单状态不正确");
 		}
 		Menu oldMenu = menuMapper.get(menuId);
 		if (oldMenu == null) {
-			throw new ServiceTipsException("没有找到菜单");
+			throw new BaseServiceTipsMsgException("没有找到菜单");
 		}
 		//如果状态相等,不执行更新
 		if (oldMenu.getState().equals(state)) {

@@ -1,26 +1,18 @@
 package pers.goetboy.services;
 
+import com.goetboy.exception.service.BaseServiceTipsMsgException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import pers.goetboy.common.exception.service.ServiceTipsException;
-import pers.goetboy.entity.sys.Role;
 import pers.goetboy.entity.sys.User;
 import pers.goetboy.mapper.RoleMapper;
 import pers.goetboy.mapper.UserMapper;
 import pers.goetboy.security.JWTUtil;
-import pers.goetboy.services.LoginRepository;
-
-import java.util.List;
 
 /**
  * @author:goetboy;
@@ -61,10 +53,10 @@ public class LoginRepository {
      * @param user
      * @return
      */
-    public void register(User user) throws ServiceTipsException {
+    public void register(User user) throws BaseServiceTipsMsgException {
         String username = user.getUsername();
         if (userMapper.findByUsername(username) != null) {
-            throw new ServiceTipsException("用户已存在");
+            throw new BaseServiceTipsMsgException("用户已存在");
         }
         userMapper.dynamicInsert(encodePassword(user));
     }

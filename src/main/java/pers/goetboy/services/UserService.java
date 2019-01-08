@@ -1,12 +1,12 @@
 package pers.goetboy.services;
 
+import com.goetboy.exception.service.BaseServiceTipsMsgException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import pers.goetboy.common.exception.service.ServiceTipsException;
 import pers.goetboy.entity.STATE_ENUM;
 import pers.goetboy.entity.sys.Role;
 import pers.goetboy.entity.sys.User;
@@ -14,10 +14,8 @@ import pers.goetboy.entity.sys.UserRole;
 import pers.goetboy.mapper.RoleMapper;
 import pers.goetboy.mapper.UserMapper;
 import pers.goetboy.mapper.UserRoleMapper;
-import pers.goetboy.security.JWTUtil;
-import pers.goetboy.utils.DataBus;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * @author goetb
@@ -60,10 +58,10 @@ public class UserService implements UserDetailsService {
      * @param user 用户信息
      */
 
-    public void updateUser(User user) throws ServiceTipsException {
+    public void updateUser(User user) throws BaseServiceTipsMsgException {
         User oldUser = userMapper.get(user.getId());
         if (oldUser == null) {
-            throw new ServiceTipsException("用户未找到");
+            throw new BaseServiceTipsMsgException("用户未找到");
         }
         oldUser.setRemark(user.getRemark());
         userMapper.dynamicUpdate(oldUser);
@@ -116,15 +114,15 @@ public class UserService implements UserDetailsService {
         roleUserMapper.deleteByUserId(id);
     }
 
-    public void updateUserState(Long userId, Integer state) throws ServiceTipsException {
+    public void updateUserState(Long userId, Integer state) throws BaseServiceTipsMsgException {
         //如果传入状态不正确
         if (state == null || STATE_ENUM.getByValue(state) == null) {
-            throw new ServiceTipsException("用户状态不正确");
+            throw new BaseServiceTipsMsgException("用户状态不正确");
         }
         User user = userMapper.get(userId);
         //如果用户没找到
         if (user == null) {
-            throw new ServiceTipsException("用户未找到");
+            throw new BaseServiceTipsMsgException("用户未找到");
         }
         //如果状态相等,不执行更新
         if (user.getState().equals(state)) {
