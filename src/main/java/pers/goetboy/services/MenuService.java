@@ -1,14 +1,11 @@
 package pers.goetboy.services;
 
-import com.goetboy.exception.service.BaseServiceTipsMsgException;
-import lombok.extern.log4j.Log4j;
-import lombok.extern.log4j.Log4j2;
+import com.goetboy.core.exception.service.BaseServiceTipsMsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pers.goetboy.entity.STATE_ENUM;
 import pers.goetboy.entity.sys.Menu;
-import pers.goetboy.entity.sys.Role;
 import pers.goetboy.mapper.MenuMapper;
 import pers.goetboy.mapper.RoleMapper;
 import pers.goetboy.mapper.RoleMenuMapper;

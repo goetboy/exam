@@ -1,19 +1,15 @@
 package pers.goetboy.common.advice;
 
-import com.goetboy.exception.service.BaseServiceTipsMsgException;
+import com.goetboy.core.exception.service.BaseServiceTipsMsgException;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import pers.goetboy.services.BaseService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@ControllerAdvice
+//@ControllerAdvice
 @Log4j2
 public class ExceptionAdvice {
     /**

@@ -1,8 +1,7 @@
 package pers.goetboy.controller;
 
-import com.goetboy.exception.service.BaseServiceTipsMsgException;
+import com.goetboy.core.exception.service.BaseServiceTipsMsgException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pers.goetboy.entity.sys.Menu;
 import pers.goetboy.services.MenuService;

@@ -14,7 +14,7 @@ import java.util.Arrays;
  * service日志切面
  */
 @Aspect
-@Component
+//@Component
 public class LogAdvice {
     private static final Logger logger = LoggerFactory.getLogger(LogAdvice.class);
 

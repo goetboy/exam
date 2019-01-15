@@ -1,6 +1,6 @@
 package pers.goetboy.services;
 
-import com.goetboy.exception.service.BaseServiceTipsMsgException;
+import com.goetboy.core.exception.service.BaseServiceTipsMsgException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
