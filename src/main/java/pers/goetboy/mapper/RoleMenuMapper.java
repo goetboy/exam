@@ -1,9 +1,6 @@
 package pers.goetboy.mapper;
 
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.InsertProvider;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.UpdateProvider;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 import pers.goetboy.entity.sys.Menu;
@@ -20,7 +17,7 @@ public interface RoleMenuMapper {
      * @return
      */
     @Select("select * from " + RoleMenu.TABLE_NAME)
-    public List<RoleMenu> getAll();
+    List<RoleMenu> getAll();
 
     /**
      * 通过id查询角色菜单关系
@@ -28,7 +25,7 @@ public interface RoleMenuMapper {
      * @return
      */
     @Select("select * from " + RoleMenu.TABLE_NAME + " where id=#{id}")
-    public RoleMenu get(Long id);
+    RoleMenu get(Long id);
 
 
     /**
@@ -36,23 +33,23 @@ public interface RoleMenuMapper {
      * @param roleMenu
      */
     @InsertProvider(type = RoleMenuMapperProvider.class, method = "insert")
-    public Long dynamicInsert(RoleMenu roleMenu);
+    Long dynamicInsert(RoleMenu roleMenu);
 
     /**
      * 删除角色对应的菜单关系
      * @param roleId
      */
     @Delete("delete " + RoleMenu.TABLE_NAME + " where role_id =#{roleId} ")
-    public void deleteByRoleId(Long roleId);
+    void deleteByRoleId(Long roleId);
     @Delete("delete " + RoleMenu.TABLE_NAME + " where menu_id =#{menuId} ")
-    public void deleteByMenuId(Long menuId);
+    void deleteByMenuId(Long menuId);
     /**
      * 根据传入条件更新
      *
      * @param roleMenu
      */
     @UpdateProvider(type = RoleMenuMapperProvider.class, method = "update")
-    public void dynamicUpdate(RoleMenu roleMenu);
+    void dynamicUpdate(RoleMenu roleMenu);
 
     /**
      * 通过id删除
@@ -60,7 +57,7 @@ public interface RoleMenuMapper {
      * @param id
      */
     @Delete("delete from " + RoleMenu.TABLE_NAME + " where id=#{id}")
-    public void delete(Long id);
+    void delete(Long id);
 
     class RoleMenuMapperProvider {
         /**
@@ -74,9 +71,9 @@ public interface RoleMenuMapper {
                 {
                     INSERT_INTO(RoleMenu.TABLE_NAME);
                     if (roleMenu.getRoleId() != null)
-                        VALUES("roleId", "#{roleId}");
+                        VALUES("role_Id", "#{roleId}");
                     if (roleMenu.getMenuId() != null)
-                        VALUES("menuId", "#{menuId}");
+                        VALUES("menu_Id", "#{menuId}");
                     if (roleMenu.getCreatedUser() != null)
                         VALUES("created_User", "#{createdUser}");
                     if (roleMenu.getUpdatedUser() != null)
@@ -96,9 +93,9 @@ public interface RoleMenuMapper {
                 {
                     UPDATE(RoleMenu.TABLE_NAME);
                     if (roleMenu.getMenuId() != null)
-                        SET("menuId=#{menuId}");
+                        SET("menu_Id=#{menuId}");
                     if (roleMenu.getRoleId() != null)
-                        SET("roleId=#{roleId}");
+                        SET("role_Id=#{roleId}");
                     if (roleMenu.getUpdatedUser() != null)
                         SET("updated_User=#{updatedUser}");
                     if (roleMenu.getRemark() != null)
@@ -115,14 +112,14 @@ public interface RoleMenuMapper {
         public String select(RoleMenu roleMenu) {
             return new SQL() {
                 {
-                    SELECT("id,menuId,roleId,state");
+                    SELECT("id,menu_Id,role_Id,state");
                     FROM(RoleMenu.TABLE_NAME);
                     if (roleMenu.getId() != null)
                         WHERE("id=#{id}");
                     if (roleMenu.getMenuId() != null)
-                        WHERE("menuId=#{menuId}");
+                        WHERE("menu_Id=#{menuId}");
                     if (roleMenu.getRoleId() != null)
-                        WHERE("roleId=#{roleId}");
+                        WHERE("role_Id=#{roleId}");
                 }
             }.toString();
         }

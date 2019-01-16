@@ -1,9 +1,6 @@
 package pers.goetboy.mapper;
 
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.InsertProvider;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.UpdateProvider;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 import pers.goetboy.entity.sys.Role;
@@ -25,7 +22,7 @@ public interface RoleMapper {
 
     //void insert(Role role);
     @InsertProvider(type = RoleMapperProvider.class, method = "insert")
-   public Long dynamicInsert(Role role);
+    Long dynamicInsert(Role role);
 
     //void update(Role role);
 
@@ -35,7 +32,7 @@ public interface RoleMapper {
      * @param role
      */
     @UpdateProvider(type = RoleMapperProvider.class, method = "update")
-    public int dynamicUpdate(Role role);
+    int dynamicUpdate(Role role);
 
     /**
      * 通过id删除
@@ -43,9 +40,9 @@ public interface RoleMapper {
      * @param id
      */
     @Delete("delete from " + Role.TABLE_NAME + " where id=#{id}")
-    public void delete(Long id);
+    void delete(Long id);
     @Select("select t.* from "+Role.TABLE_NAME+" t where t.id in (select t1.role_id from "+ UserRole.TABLE_NAME+ " t1 where  t1.user_id=#{userId}) ")
-    public List<Role> findByUserId(Long userId);
+    List<Role> findByUserId(Long userId);
 
     /**
      * 通过菜单查角色
@@ -53,7 +50,7 @@ public interface RoleMapper {
      * @return
      */
     @Select("select t.* from "+Role.TABLE_NAME+" t where t.id in (select t1.role_id from "+ RoleMenu.TABLE_NAME+ " t1 where  t1.menu_id=#{menuId}) ")
-    public List<Role> findByMenuId(Long menuId);
+    List<Role> findByMenuId(Long menuId);
     class RoleMapperProvider {
         /**
          * 插入动态语句

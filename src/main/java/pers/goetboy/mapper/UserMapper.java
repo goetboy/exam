@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Repository
 public interface UserMapper {
-    static final String TABLE_NAME = User.TABLE_NAME;
+    String TABLE_NAME = User.TABLE_NAME;
 
     @Select("select * from " + TABLE_NAME)
     List<User> getAll();
@@ -63,8 +63,8 @@ public interface UserMapper {
                         VALUES("username", "#{username}");
                     if (user.getPassword() != null)
                         VALUES("password", "#{password}");
-                 /*   if (user.getNickName() != null)
-                        VALUES("nickName", "#{nickName}");*/
+                 if (user.getNickName() != null)
+                        VALUES("nickName", "#{nickName}");
                     if (user.getCreatedUser() != null)
                         VALUES("created_User", "#{createdUser}");
                     if (user.getUpdatedUser() != null)

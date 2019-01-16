@@ -77,7 +77,7 @@ public class UserService implements UserDetailsService {
      * @param userId 用户id
      * @param roles  角色信息
      */
-    public void updateUserRole(long userId, List<Role> roles) {
+    public void updateUserRole(Long userId, List<Role> roles) {
 
         List<Role> oldRoles = roleMapper.findByUserId(userId);
         //过滤已有角色信息
@@ -98,10 +98,13 @@ public class UserService implements UserDetailsService {
         }
         //添加新的角色信息
         if (CollectionUtils.isNotEmpty(roles)) {
-            UserRole roleUser = new UserRole();
-            roleUser.setRoleId(roles.get(0).getId());
-            roleUser.setUserId(userId);
-            roleUserMapper.dynamicInsert(roleUser);
+            roles.forEach(role -> {
+                UserRole userRole = new UserRole();  userRole.setUserId(userId);
+                userRole.setRoleId(role.getId());
+                userRole.setUserId(userId);
+                roleUserMapper.dynamicInsert(userRole);
+            });
+
         }
 
     }

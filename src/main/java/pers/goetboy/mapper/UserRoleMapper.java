@@ -1,9 +1,6 @@
 package pers.goetboy.mapper;
 
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.InsertProvider;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.UpdateProvider;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 import pers.goetboy.entity.sys.Role;
@@ -17,15 +14,15 @@ public interface UserRoleMapper {
 
 
     @Select("select * from " + UserRole.TABLE_NAME)
-    public List<UserRole> getAll();
+    List<UserRole> getAll();
 
     @Select("select * from " + UserRole.TABLE_NAME + " where id=#{id}")
-    public UserRole get(Long id);
+    UserRole get(Long id);
 
 
     //void insert(Role role);
     @InsertProvider(type = UserRoleMapperProvider.class, method = "insert")
-    public Long dynamicInsert(UserRole UserRole);
+    Long dynamicInsert(UserRole userRole);
 
     //void update(Role role);
 
@@ -35,7 +32,7 @@ public interface UserRoleMapper {
      * @param UserRole
      */
     @UpdateProvider(type = UserRoleMapperProvider.class, method = "update")
-    public void dynamicUpdate(UserRole UserRole);
+    void dynamicUpdate(UserRole userRole);
 
     /**
      * 通过角色id删除用户角色映射信息
@@ -43,7 +40,7 @@ public interface UserRoleMapper {
      * @param roleId
      */
     @Delete("delete " + UserRole.TABLE_NAME + " where role_id = #{roleId} ")
-    public void deleteByRoleId(Long roleId);
+    void deleteByRoleId(Long roleId);
 
     /**
      * 通过用户id删除用户角色映射信息
@@ -51,15 +48,15 @@ public interface UserRoleMapper {
      * @param userId
      */
     @Delete("delete " + UserRole.TABLE_NAME + " where user_id = #{userId}")
-    public void deleteByUserId(Long userId);
+    void deleteByUserId(Long userId);
 
     /**
      * 通过用户id删除用户角色映射信息
      *
      * @param userId
      */
-    @Delete("delete " + UserRole.TABLE_NAME + " where user_id =#{userId} and role_id =#{roleId}")
-    public void deleteByUserIdAndRoleId(Long userId, Long roleId);
+    @Delete("delete " + UserRole.TABLE_NAME + " where user_id =#{0} and role_id =#{1}")
+    void deleteByUserIdAndRoleId(Long userId, Long roleId);
 
     /**
      * 通过id删除
@@ -76,18 +73,18 @@ public interface UserRoleMapper {
          * @param userRole
          * @return
          */
-        public String insert(UserRole userRole) {
+        public String insert( UserRole userRole) {
             return new SQL() {
                 {
                     INSERT_INTO(UserRole.TABLE_NAME);
                     if (userRole.getRoleId() != null)
-                        VALUES("roleId", "#{roleId}");
+                        VALUES("role_Id", "#{roleId}");
                     if (userRole.getUserId() != null)
-                        VALUES("userId", "#{userId}");
+                        VALUES("user_Id", "#{userId}");
                     if (userRole.getCreatedUser() != null)
-                        VALUES("createdUser", "#{createdUser}");
+                        VALUES("created_User", "#{createdUser}");
                     if (userRole.getUpdatedUser() != null)
-                        VALUES("updatedUser", "#{updatedUser}");
+                        VALUES("updated_User", "#{updatedUser}");
                     if (userRole.getRemark() != null)
                         VALUES("remark", "#{remark}");
                     if (userRole.getState() != null)
@@ -103,9 +100,9 @@ public interface UserRoleMapper {
                 {
                     UPDATE(UserRole.TABLE_NAME);
                     if (userRole.getUserId() != null)
-                        SET("userId=#{userId}");
+                        SET("user_Id=#{userId}");
                     if (userRole.getRoleId() != null)
-                        SET("roleId=#{roleId}");
+                        SET("role_Id=#{roleId}");
                     if (userRole.getUpdatedUser() != null)
                         SET("updated_User=#{updatedUser}");
                     if (userRole.getRemark() != null)
@@ -122,14 +119,14 @@ public interface UserRoleMapper {
         public String select(UserRole userRole) {
             return new SQL() {
                 {
-                    SELECT("id,userId,roleId,state");
+                    SELECT("id,user_id,role_id,state");
                     FROM(UserRole.TABLE_NAME);
                     if (userRole.getId() != null)
                         WHERE("id=#{id}");
                     if (userRole.getUserId() != null)
-                        WHERE("userId=#{userId}");
+                        WHERE("user_Id=#{userId}");
                     if (userRole.getRoleId() != null)
-                        WHERE("roleId=#{roleId}");
+                        WHERE("role_Id=#{roleId}");
                 }
             }.toString();
         }
