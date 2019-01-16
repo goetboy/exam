@@ -40,41 +40,41 @@ public class UserController extends AbstractController {
      * 可更新 nickName 字段
      * 可更新 remark字段
      *
-     * @param param 使用 {@link Param#user}用户信息
+     * @param param 使用 {@link UserParam#user}用户信息
      */
     @PostMapping(value = "/update")
-    public void update(@RequestBody Param param) throws BaseServiceTipsMsgException {
+    public void update(@RequestBody UserParam param) throws BaseServiceTipsMsgException {
         userService.updateUser(param.getUser());
     }
 
     /**
      * 删除用户信息
      *
-     * @param param 使用 {@link Param#userId} 用户id
+     * @param param 使用 {@link UserParam#userId} 用户id
      */
     @PostMapping(value = "/delete")
-    public void delete(@RequestBody Param param) {
+    public void delete(@RequestBody UserParam param) {
         userService.deleteUser(param.getUserId());
     }
 
     /**
      * 更新用户角色信息
      *
-     * @param param 使用{@link Param#userId} 用户id {@link Param#roles}角色信息
+     * @param param 使用{@link UserParam#userId} 用户id {@link UserParam#roles}角色信息
      */
     @PostMapping(value = "/update/role")
-    public void updateUserRole(@RequestBody Param param) {
+    public void updateUserRole(@RequestBody UserParam param) {
         userService.updateUserRole(param.getUserId(), param.getRoles());
     }
 
     /**
      * 更新用户状态
      *
-     * @param param 用户id {@link Param#userId} 用户id{@link Param#state } 用户状态 0停用 1正常
+     * @param param 用户id {@link UserParam#userId} 用户id{@link UserParam#state } 用户状态 0停用 1正常
      * @throws BaseServiceTipsMsgException
      */
     @PostMapping(value = "/update/state")
-    public void updateUserState(@RequestBody Param param) throws BaseServiceTipsMsgException {
+    public void updateUserState(@RequestBody UserParam param) throws BaseServiceTipsMsgException {
         userService.updateUserState(param.getUserId(), param.getState());
     }
 
@@ -82,7 +82,7 @@ public class UserController extends AbstractController {
 }
 
 @Data
-class Param {
+class UserParam {
     /**
      * 用户id
      */

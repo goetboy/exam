@@ -51,6 +51,7 @@ public class RoleService extends AbstractService<Role> {
 		if (existRole != null) {
 			throw new BaseServiceTipsMsgException("已经有同名角色存在");
 		}
+		role.setState(1);
 		Long id = roleMapper.dynamicInsert(role);
 		List<Menu> menus = role.getMenus();
 		if (menus != null && !menus.isEmpty()) {
@@ -76,7 +77,7 @@ public class RoleService extends AbstractService<Role> {
 			throw new BaseServiceTipsMsgException("没有找到角色");
 		}
 		Role existRole = roleMapper.getByName(role.getName());
-		if (existRole != null) {
+		if (existRole != null&& !existRole.getId().equals(role.getId())) {
 			throw new BaseServiceTipsMsgException("已经有同名角色存在");
 		}
 		oldRole.setName(role.getName());

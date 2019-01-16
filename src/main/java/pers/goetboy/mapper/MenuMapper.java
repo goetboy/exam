@@ -75,8 +75,8 @@ public interface MenuMapper {
                     INSERT_INTO(Menu.TABLE_NAME);
                     if (menu.getName() != null)
                         VALUES("name", "#{name}");
-                    if (menu.getParent() != null)
-                        VALUES("parent", "#{parent}");
+                    if (menu.getParentId() != null)
+                        VALUES("parent_id", "#{parentId}");
                     if (menu.getSort() != null)
                         VALUES("sort", "#{sort}");
                     if (menu.getType() != null)
@@ -103,8 +103,8 @@ public interface MenuMapper {
                     UPDATE(Menu.TABLE_NAME);
                     if (menu.getName() != null)
                         SET("name=#{name}");
-                    if (menu.getParent() != null)
-                        SET("parent=#{parent}");
+                    if (menu.getParentId() != null)
+                        SET("parent_id=#{parentId}");
                     if (menu.getSort() != null)
                         SET("sort=#{sort}");
                     if (menu.getType() != null)
@@ -117,7 +117,7 @@ public interface MenuMapper {
                         SET("remark=#{remark}");
                     if (menu.getState() != null)
                         SET("state=#{state}");
-                    SET("updatedTime=SYSDATE");
+                    SET("updated_Time=SYSDATE");
                     WHERE("id=#{id}");
 
                 }
@@ -127,7 +127,7 @@ public interface MenuMapper {
         public String select(Menu menu) {
             return new SQL() {
                 {
-                    SELECT("id,name,url,type,parent,sort,state");
+                    SELECT("id,name,url,type,parent_id,sort,state");
                     FROM(Menu.TABLE_NAME);
                     if (menu.getId() != null)
                         WHERE("id=#{id}");

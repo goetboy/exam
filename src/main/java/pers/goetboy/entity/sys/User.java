@@ -1,7 +1,6 @@
 package pers.goetboy.entity.sys;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,12 +9,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pers.goetboy.entity.AbstractEntity;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,19 +34,23 @@ public class User extends AbstractEntity implements UserDetails {
     @Column(name = "userName")
     private String username;
     /**
+     * 昵称
+     */
+    @Column(name = "nickName")
+    private String nickName;
+    /**
      * 密码
      */
     @Column(name = "password")
     private String password;
     @Column(name = "name")
-    private  String name;
+    private String name;
     @Column(name = "phone")
-    private  String phone;
+    private String phone;
     @Column(name = "address")
-    private  String address;
+    private String address;
     @Column(name = "email")
     private String email;
-
     @Transient
     private List<Role> roles;
     /**
@@ -89,6 +91,7 @@ public class User extends AbstractEntity implements UserDetails {
     public String getPassword() {
         return this.password;
     }
+
     @Override
     public String getUsername() {
         return this.username;

@@ -18,6 +18,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @MapperScan("pers.goetboy.mapper")
 @SpringBootApplication
 @ServletComponentScan
+@EnableAspectJAutoProxy
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

@@ -46,8 +46,8 @@ public class Menu extends AbstractEntity implements Serializable {
     /**
      * 父菜单id
      */
-    @Column(name = "parent")
-    private Integer parent;
+    @Column(name = "parent_id")
+    private Integer parentId;
     /**
      * 排序
      */

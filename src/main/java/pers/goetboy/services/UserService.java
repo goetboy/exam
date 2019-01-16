@@ -63,7 +63,11 @@ public class UserService implements UserDetailsService {
         if (oldUser == null) {
             throw new BaseServiceTipsMsgException("用户未找到");
         }
+        oldUser.setNickName(user.getNickName());
+        oldUser.setEmail(user.getEmail());
+        oldUser.setAddress(user.getAddress());
         oldUser.setRemark(user.getRemark());
+        oldUser.setState(user.getState());
         userMapper.dynamicUpdate(oldUser);
     }
 

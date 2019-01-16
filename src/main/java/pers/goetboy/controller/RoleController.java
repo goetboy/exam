@@ -1,6 +1,7 @@
 package pers.goetboy.controller;
 
 import com.goetboy.core.exception.service.BaseServiceTipsMsgException;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pers.goetboy.entity.sys.Menu;
@@ -35,47 +36,77 @@ public class RoleController {
     }
 
     /**
-     * 更新用户信息
+     * 更新角色信息
      * 可更新 name 字段
      * 可更新 remark字段
      *
-     * @param role 用户信息
+     * @param param 用户信息
      */
     @PostMapping(value = "/update")
-    public void update(@RequestBody Role role) throws BaseServiceTipsMsgException {
-        roleService.updateRole(role);
+    public void update(@RequestBody RoleParam param) throws BaseServiceTipsMsgException {
+        roleService.updateRole(param.getRole());
     }
 
     /**
-     * 删除用户信息
+     * 添加角色信息
      *
-     * @param roleId 用户id
+     * @param param 角色信息
+     */
+    @PostMapping(value = "/save")
+    public void save(@RequestBody RoleParam param) throws BaseServiceTipsMsgException {
+        roleService.saveRole(param.getRole());
+    }
+
+    /**
+     * 删除角色信息
+     *
+     * @param param 用户id
      */
     @PostMapping(value = "/delete")
-    public void delete(@RequestBody Long roleId) {
-        roleService.deleteRole(roleId);
+    public void delete(@RequestBody RoleParam param) {
+        roleService.deleteRole(param.getRoleId());
     }
 
     /**
-     * 更新用户角色信息
+     * 更新角色菜单信息
      *
-     * @param roleId 用户id
-     * @param menus  角色信息
+     * @param param 角色信息/用户信息
      */
     @PostMapping(value = "/update/menu")
-    public void updateRoleMenu(@RequestBody Long roleId,@RequestBody List<Menu> menus) throws BaseServiceTipsMsgException {
-        roleService.updateRoleMenu(roleId, menus);
+    public void updateRoleMenu(@RequestBody RoleParam param) throws BaseServiceTipsMsgException {
+        roleService.updateRoleMenu(param.getRoleId(), param.getMenus());
     }
 
     /**
-     * 更新用户状态
+     * 更新角色状态
      *
-     * @param RoleId 用户id
-     * @param state  用户状态 0停用 1正常
+     * @param param roleId, 角色状态 0停用 1正常
      * @throws BaseServiceTipsMsgException
      */
     @PostMapping(value = "/update/state")
-    public void updateRoleState(@RequestBody Long RoleId,@RequestBody Integer state) throws BaseServiceTipsMsgException {
-        roleService.updateRoleState(RoleId, state);
+    public void updateRoleState(@RequestBody RoleParam param) throws BaseServiceTipsMsgException {
+        roleService.updateRoleState(param.getRoleId(), param.getState());
     }
+
+
+}
+
+@Data
+class RoleParam {
+    /**
+     * 角色id
+     */
+    private Long roleId;
+    /**
+     * 角色状态
+     */
+    private Integer state;
+    /**
+     * 角色信息
+     */
+    private List<Menu> menus;
+    /**
+     * 角色信息
+     */
+    private Role role;
 }
