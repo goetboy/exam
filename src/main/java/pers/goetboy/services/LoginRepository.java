@@ -58,7 +58,7 @@ public class LoginRepository {
         if (userMapper.findByUsername(username) != null) {
             throw new BaseServiceTipsMsgException("用户已存在");
         }
-        userMapper.dynamicInsert(encodePassword(user));
+        userMapper.insertSelective(encodePassword(user));
     }
 
     /**

@@ -30,24 +30,24 @@ public class UserService implements UserDetailsService {
     @Autowired
     private RoleMapper roleMapper;
 
-    public User get(Long id) {
-        return userMapper.get(id);
+    public User get(Integer id) {
+        return userMapper.selectByPrimaryKey(id);
     }
 
-    public Long saveUser(User user) {
-        return userMapper.dynamicInsert(user);
+    public Integer saveUser(User user) {
+        return userMapper.insertSelective(user);
     }
 
     /**
      * 获取用户列表
      */
     public List<User> listUser() {
-        List<User> users = userMapper.getAll();
+        List<User> users = userMapper.selectAll();
         if (CollectionUtils.isEmpty(users)) {
             return null;
         }
         users.forEach(user -> {
-            user.setRoles(roleMapper.findByUserId(user.getId()));
+            user.setRoles(roleMapper.selectByUserId(user.getId()));
         });
         return users;
     }
@@ -59,7 +59,7 @@ public class UserService implements UserDetailsService {
      */
 
     public void updateUser(User user) throws BaseServiceTipsMsgException {
-        User oldUser = userMapper.get(user.getId());
+        User oldUser = userMapper.selectByPrimaryKey(user.getId());
         if (oldUser == null) {
             throw new BaseServiceTipsMsgException("用户未找到");
         }
@@ -68,7 +68,7 @@ public class UserService implements UserDetailsService {
         oldUser.setAddress(user.getAddress());
         oldUser.setRemark(user.getRemark());
         oldUser.setState(user.getState());
-        userMapper.dynamicUpdate(oldUser);
+        userMapper.updateByPrimaryKeySelective(oldUser);
     }
 
     /**
@@ -77,9 +77,9 @@ public class UserService implements UserDetailsService {
      * @param userId 用户id
      * @param roles  角色信息
      */
-    public void updateUserRole(Long userId, List<Role> roles) {
+    public void updateUserRole(Integer userId, List<Role> roles) {
 
-        List<Role> oldRoles = roleMapper.findByUserId(userId);
+        List<Role> oldRoles = roleMapper.selectByUserId(userId);
         //过滤已有角色信息
         if (CollectionUtils.isNotEmpty(oldRoles) && CollectionUtils.isNotEmpty(roles)) {
             roles.forEach(role -> {
@@ -99,10 +99,11 @@ public class UserService implements UserDetailsService {
         //添加新的角色信息
         if (CollectionUtils.isNotEmpty(roles)) {
             roles.forEach(role -> {
-                UserRole userRole = new UserRole();  userRole.setUserId(userId);
+                UserRole userRole = new UserRole();
+                userRole.setUserId(userId);
                 userRole.setRoleId(role.getId());
                 userRole.setUserId(userId);
-                roleUserMapper.dynamicInsert(userRole);
+                roleUserMapper.insertSelective(userRole);
             });
 
         }
@@ -114,19 +115,19 @@ public class UserService implements UserDetailsService {
      *
      * @param id 用户id
      */
-    public void deleteUser(Long id) {
+    public void deleteUser(Integer id) {
         //删除用户信息
-        userMapper.delete(id);
+        userMapper.deleteByPrimaryKey(id);
         //删除角色信息
         roleUserMapper.deleteByUserId(id);
     }
 
-    public void updateUserState(Long userId, Integer state) throws BaseServiceTipsMsgException {
+    public void updateUserState(Integer userId, Integer state) throws BaseServiceTipsMsgException {
         //如果传入状态不正确
         if (state == null || STATE_ENUM.getByValue(state) == null) {
             throw new BaseServiceTipsMsgException("用户状态不正确");
         }
-        User user = userMapper.get(userId);
+        User user = userMapper.selectByPrimaryKey(userId);
         //如果用户没找到
         if (user == null) {
             throw new BaseServiceTipsMsgException("用户未找到");
@@ -136,7 +137,7 @@ public class UserService implements UserDetailsService {
             return;
         }
         user.setState(state);
-        userMapper.dynamicUpdate(user);
+        userMapper.updateByPrimaryKeySelective(user);
     }
 
     @Override
@@ -150,8 +151,8 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public List<Role> loadUserRoles(Long userId) {
-        List<Role> roles = roleMapper.findByUserId(userId);
+    public List<Role> loadUserRoles(Integer userId) {
+        List<Role> roles = roleMapper.selectByUserId(userId);
         if (roles == null || roles.isEmpty()) {
             return null;
         } else {

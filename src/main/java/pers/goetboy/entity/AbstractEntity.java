@@ -24,8 +24,8 @@ import java.util.Date;
 public class AbstractEntity implements Serializable {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    //@GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
     /**
      * 创造者
      */

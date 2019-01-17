@@ -24,8 +24,8 @@ public class MenuService extends AbstractService<Menu> {
     @Autowired
     RoleMapper roleMapper;
 
-    public Menu get(Long id) {
-        return menuMapper.get(id);
+    public Menu get(Integer id) {
+        return menuMapper.selectByPrimaryKey(id);
     }
 
     /**
@@ -34,7 +34,7 @@ public class MenuService extends AbstractService<Menu> {
      * @return
      */
     public List<Menu> listMenu() {
-        return menuMapper.getAll();
+        return menuMapper.selectAll();
     }
 
 
@@ -44,10 +44,9 @@ public class MenuService extends AbstractService<Menu> {
      * @param menu
      * @return
      */
-    public Long saveMenu(Menu menu) {
+    public Integer saveMenu(Menu menu) {
         menu.setState(1);
-        Long id = menuMapper.dynamicInsert(menu);
-        return id;
+        return  menuMapper.insertSelective(menu);
     }
 
     /**
@@ -56,7 +55,7 @@ public class MenuService extends AbstractService<Menu> {
      * @param menu
      */
     public void updateMenu(Menu menu) throws BaseServiceTipsMsgException {
-        Menu oldMenu = menuMapper.get(menu.getId());
+        Menu oldMenu = menuMapper.selectByPrimaryKey(menu.getId());
         if (oldMenu == null) {
             throw new BaseServiceTipsMsgException("没有找到菜单");
         }
@@ -65,7 +64,7 @@ public class MenuService extends AbstractService<Menu> {
         oldMenu.setParentId(menu.getParentId());
         oldMenu.setSort(menu.getSort());
         oldMenu.setType(menu.getType());
-        menuMapper.dynamicUpdate(oldMenu);
+        menuMapper.updateByPrimaryKeySelective(oldMenu);
 
     }
 
@@ -74,20 +73,20 @@ public class MenuService extends AbstractService<Menu> {
      *
      * @param id
      */
-    public void deleteMenu(Long id) {
+    public void deleteMenu(Integer id) {
         roleMenuMapper.deleteByMenuId(id);
-        menuMapper.delete(id);
+        menuMapper.deleteByPrimaryKey(id);
     }
 
     /**
      * 更新菜单状态
      */
-    public void updateMenuState(Long menuId, Integer state) throws BaseServiceTipsMsgException {
+    public void updateMenuState(Integer menuId, Integer state) throws BaseServiceTipsMsgException {
         //如果传入状态不正确
         if (state == null || STATE_ENUM.getByValue(state) == null) {
             throw new BaseServiceTipsMsgException("菜单状态不正确");
         }
-        Menu oldMenu = menuMapper.get(menuId);
+        Menu oldMenu = menuMapper.selectByPrimaryKey(menuId);
         if (oldMenu == null) {
             throw new BaseServiceTipsMsgException("没有找到菜单");
         }
@@ -96,6 +95,6 @@ public class MenuService extends AbstractService<Menu> {
             return;
         }
         oldMenu.setState(state);
-        menuMapper.dynamicUpdate(oldMenu);
+        menuMapper.updateByPrimaryKeySelective(oldMenu);
     }
 }

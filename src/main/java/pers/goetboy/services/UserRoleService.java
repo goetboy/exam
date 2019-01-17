@@ -11,8 +11,8 @@ import java.util.List;
 public class UserRoleService extends AbstractService<UserRole> {
     @Autowired
     UserRoleMapper userRoleMapper;
-    public UserRole get(Long id) {
-        return userRoleMapper.get(id);
+    public UserRole get(Integer id) {
+        return userRoleMapper.selectByPrimaryKey(id);
     }
 
     /**
@@ -21,7 +21,7 @@ public class UserRoleService extends AbstractService<UserRole> {
      * @return
      */
     public  List<UserRole> findAll() {
-        return userRoleMapper.getAll();
+        return userRoleMapper.selectAll();
     }
 
     /**
@@ -29,8 +29,8 @@ public class UserRoleService extends AbstractService<UserRole> {
      * @param UserRole
      * @return
      */
-    public  Long save(UserRole UserRole) {
-        Long id = userRoleMapper.dynamicInsert(UserRole);
+    public  Integer save(UserRole UserRole) {
+        Integer id = Integer.valueOf(userRoleMapper.insertSelective(UserRole));
         return  id;
     }
     /**
@@ -39,15 +39,14 @@ public class UserRoleService extends AbstractService<UserRole> {
      * @return
      */
     public  void update(UserRole UserRole) {
-        userRoleMapper.dynamicUpdate(UserRole);
-    }
+        userRoleMapper.updateByPrimaryKeySelective(UserRole);    }
 
     /**
      * 删除角色菜单映射信息
      * @param id
      */
-    public  void delete(Long id) {
-        userRoleMapper.delete(id);
+    public  void delete(Integer id) {
+        userRoleMapper.deleteByPrimaryKey(id);
     }
 
 

@@ -25,7 +25,7 @@ public class UserServiceTest extends BaseTest {
 
     @Test
     public void testGet() {
-        User user = userService.get(1L);
+        User user = userService.get(1);
         System.out.println(user);
     }
 
@@ -45,21 +45,21 @@ public class UserServiceTest extends BaseTest {
     @Test
     public void testUpdate() {
         User user = new User();
-        user.setId(3L);
+        user.setId(3);
         user.setUsername("test1");
         user.setPassword("test");
         user.setState(1);
         user.setCreatedTime(new Date());
 
         //  userService.updateUser(user);
-        User user1 = userService.get(3L);
+        User user1 = userService.get(3);
         System.out.println(user1);
     }
 
     @Test
     public void testDelete() {
-        userService.deleteUser(2L);
-        User user1 = userService.get(2L);
+        userService.deleteUser(2);
+        User user1 = userService.get(2);
         System.out.println(user1);
     }
 

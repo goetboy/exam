@@ -31,7 +31,7 @@ public class MenuController extends AbstractController {
      * @return
      */
     @GetMapping(value = "/get")
-    public Menu get(Long menuId) {
+    public Menu get(Integer menuId) {
         return menuService.get(menuId);
     }
 
@@ -79,7 +79,7 @@ class MenuParam {
     /**
      * 菜单id
      */
-    private Long menuId;
+    private Integer menuId;
     /**
      * 菜单状态
      */

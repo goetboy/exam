@@ -31,7 +31,7 @@ public class RoleController {
      * @return
      */
     @GetMapping(value = "/get")
-    public Role get(Long roleId) {
+    public Role get(Integer roleId) {
         return roleService.get(roleId);
     }
 
@@ -96,7 +96,7 @@ class RoleParam {
     /**
      * 角色id
      */
-    private Long roleId;
+    private Integer roleId;
     /**
      * 角色状态
      */

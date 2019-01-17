@@ -31,7 +31,7 @@ public class UserController extends AbstractController {
      * @return
      */
     @GetMapping(value = "/get")
-    public User get(Long userId) {
+    public User get(Integer userId) {
         return userService.get(userId);
     }
 
@@ -86,7 +86,7 @@ class UserParam {
     /**
      * 用户id
      */
-    private Long userId;
+    private Integer userId;
     /**
      * 用户状态
      */

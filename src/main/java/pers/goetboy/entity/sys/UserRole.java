@@ -25,11 +25,11 @@ public class UserRole extends AbstractEntity implements Serializable {
      * 角色id
      */
     @Column(name = "role_id")
-    private Long roleId;
+    private Integer roleId;
     /**
      * 用户id
      */
     @Column(name = "user_id")
-    private Long userId;
+    private Integer userId;
 
 }
