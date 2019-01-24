@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
@@ -17,12 +16,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.header.Header;
-import org.springframework.security.web.header.writers.StaticHeadersWriter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -31,7 +27,12 @@ import pers.goetboy.security.handler.EntryPointUnauthorizedHandler;
 import pers.goetboy.security.handler.RestAccessDeniedHandler;
 
 import java.util.Arrays;
+import java.util.Collections;
 
+/**
+ *
+ * @author goetb
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -103,9 +104,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     protected CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedOrigins(Collections.singletonList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "HEAD", "OPTION"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.addExposedHeader("Authorization");
         configuration.applyPermitDefaultValues();
 
@@ -116,21 +117,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     CorsFilter corsFilter(CorsConfigurationSource corsConfigurationSource) {
-        CorsFilter corsFilter = new CorsFilter(corsConfigurationSource);
-        return corsFilter;
+        return new CorsFilter(corsConfigurationSource);
     }
 
     @Bean
     public FilterInvocationSecurityMetadataSource mySecurityMetadataSource() {
-        MyFilterInvocationSecurityMetadataSource securityMetadataSource = new MyFilterInvocationSecurityMetadataSource();
-        return securityMetadataSource;
+        return new MyFilterInvocationSecurityMetadataSource();
 
     }
 
     @Bean
     public MyAccessDecisionManager myAccessDecisionManager() {
-        MyAccessDecisionManager myAccessDecisionManager = new MyAccessDecisionManager();
-        return myAccessDecisionManager;
+        return new MyAccessDecisionManager();
 
     }
 }

@@ -10,15 +10,20 @@ import java.util.List;
 
 /**
  * 用户管理mapper
+ * @author goetb
  */
 @Repository
 public interface UserMapper extends Mapper<User> {
     String TABLE_NAME = User.TABLE_NAME;
 
-
+    /**
+     * 通过用户名查询用户
+     *
+     * @param username
+     * @return
+     */
     @Select("select id,userName,password,state from " + TABLE_NAME + " where username=#{username}")
-    User  findByUsername(String username);
-
+    User selectByUsername(String username);
 
 
 }

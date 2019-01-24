@@ -1,78 +1,80 @@
 package pers.goetboy.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.util.AntPathMatcher;
+import pers.goetboy.entity.STATE_ENUM;
+import pers.goetboy.entity.sys.Menu;
+import pers.goetboy.entity.sys.Role;
+import pers.goetboy.mapper.MenuMapper;
+import pers.goetboy.mapper.RoleMapper;
+import tk.mybatis.mapper.entity.Example;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
-import java.util.Properties;
+import java.util.List;
+import java.util.Optional;
 
 /**
- * @author:goetb
+ * 菜单校验
+ *
+ * @author:goetboy
  * @date 2019 /01 /23
  **/
 @Log4j2
 public class MyFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
-    //配置文件的加载
-    private static String urlRoleMap;
 
-    static {
-        Properties prop = new Properties();
-        InputStream in = Object.class.getResourceAsStream("/spring-security.properties");
-        log.error("加载URL的配置文件");
-        try {
-            prop.load(in);
-            urlRoleMap = prop.getProperty("urls").trim();
-
-        } catch (IOException e) {
-            log.error("spring-security.properties配置路径不存在{}", e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private final AntPathMatcher antPathMatcher = new AntPathMatcher();
-
+    private final static String[] whiteList = new String[]{"/login/**", "/druid/**"};
+    @Autowired
+    MenuMapper menuMapper;
+    @Autowired
+    RoleMapper roleMapper;
 
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
+        final AntPathMatcher antPathMatcher = new AntPathMatcher();
         FilterInvocation fi = (FilterInvocation) object;
-        StringBuffer roles = new StringBuffer("START");
+        StringBuffer roleStr = new StringBuffer();
         String url = fi.getRequestUrl();
-//    String httpMethod = fi.getRequest().getMethod();
-        ObjectMapper jsonObject = null;
-        try {
-            //jsonObject = JSONObject.parseObject(urlRoleMap);
-        } catch (Exception e) {
-// TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        String value = "";
-        //遍历json
-       /* for (String key : jsonObject.keySet()) {
-            if (antPathMatcher.match(key, url)) {
-              //  value = jsonObject.getString(key);
-                //如果有，号的就说明是多个角色
-                roles.append("," + value);
+        System.out.println(url);
+
+        //白名单
+        for (String s : whiteList) {
+            if (antPathMatcher.matchStart(s, url)) {
+                return SecurityConfig.createList(roleStr.append("Role").toString());
             }
-        }*/
-        if (!("START").equals(roles)) {
-            return SecurityConfig.createList(roles.toString());
+        }
+        //校验角色权限
+        SecurityContextHolder.getContext().getAuthentication().getAuthorities().forEach(authority ->
+        {
+            //获取角色信息
+            Example example = new Example(Role.class);
+
+            example.createCriteria().andEqualTo("name", authority.getAuthority()).andEqualTo("state", STATE_ENUM.NORMAL.getValue());
+            Role role = roleMapper.selectOneByExample(example);
+
+            List<Menu> menus = menuMapper.selectByRoleId(role.getId());
+
+            if (CollectionUtils.isNotEmpty(menus)) {
+                Optional<Menu> menuOptional = menus.stream().filter(menu -> antPathMatcher.matchStart(menu.getUrl(), url)).findFirst();
+                if (menuOptional.isPresent()) {
+                    roleStr.append("," + authority.getAuthority());
+                }
+            }
+        });
+
+        if (roleStr.length() > 0) {
+            return SecurityConfig.createList(roleStr.toString());
         } else {
             log.error("没有匹配到URL");
-            //没有匹配到
-            // return SecurityConfig.createList("NULL");
             throw new AccessDeniedException("not allow");
         }
-
-        //    return null;
     }
 
 

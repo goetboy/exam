@@ -142,11 +142,12 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userMapper.findByUsername(username);
+        User user = userMapper.selectByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
         } else {
             user.setRoles(loadUserRoles(user.getId()));
+            
             return user;
         }
     }

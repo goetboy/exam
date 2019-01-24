@@ -6,11 +6,13 @@ import lombok.Getter;
 
 /**
  * 实体状态
+ *
+ * @author goetb
  */
 @Getter
 public enum STATE_ENUM {
-    normal(1),
-    disable(0);
+    NORMAL(1),
+    DISABLE(0);
     @JsonValue
     private Integer value;
 
@@ -18,7 +20,12 @@ public enum STATE_ENUM {
         this.value = value;
     }
 
-    @JsonCreator //枚举入参注解
+    /**
+     * 枚举入参注解
+     *
+     * @param value 参数值
+     */
+    @JsonCreator
     public static STATE_ENUM getByValue(Integer value) {
         for (STATE_ENUM state : values()) {
             if (state.getValue().equals(value)) {

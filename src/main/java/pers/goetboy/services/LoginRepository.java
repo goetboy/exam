@@ -1,18 +1,26 @@
 package pers.goetboy.services;
 
 import com.goetboy.core.exception.service.BaseServiceTipsMsgException;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import pers.goetboy.entity.sys.Role;
 import pers.goetboy.entity.sys.User;
 import pers.goetboy.mapper.RoleMapper;
 import pers.goetboy.mapper.UserMapper;
 import pers.goetboy.security.JWTUtil;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author:goetboy;
@@ -42,8 +50,7 @@ public class LoginRepository {
         UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
         Authentication authentication = authenticationManager.authenticate(upToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        UserDetails userDetails = userMapper.findByUsername(username);
-        String token = jwtUtil.generateToken(userDetails);
+        String token = jwtUtil.generateToken((User) authentication.getPrincipal());
         return token;
     }
 
@@ -55,7 +62,7 @@ public class LoginRepository {
      */
     public void register(User user) throws BaseServiceTipsMsgException {
         String username = user.getUsername();
-        if (userMapper.findByUsername(username) != null) {
+        if (userMapper.selectByUsername(username) != null) {
             throw new BaseServiceTipsMsgException("用户已存在");
         }
         userMapper.insertSelective(encodePassword(user));
