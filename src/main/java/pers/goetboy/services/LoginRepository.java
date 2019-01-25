@@ -1,26 +1,17 @@
 package pers.goetboy.services;
 
 import com.goetboy.core.exception.service.BaseServiceTipsMsgException;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import pers.goetboy.entity.sys.Role;
 import pers.goetboy.entity.sys.User;
 import pers.goetboy.mapper.RoleMapper;
 import pers.goetboy.mapper.UserMapper;
 import pers.goetboy.security.JWTUtil;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author:goetboy;
@@ -28,14 +19,22 @@ import java.util.stream.Collectors;
  **/
 @Service
 public class LoginRepository {
-    @Autowired
+    final
     UserMapper userMapper;
-    @Autowired
+    final
     AuthenticationManager authenticationManager;
-    @Autowired
+    final
     JWTUtil jwtUtil;
-    @Autowired
+    final
     RoleMapper roleMapper;
+
+    @Autowired
+    public LoginRepository(UserMapper userMapper, AuthenticationManager authenticationManager, JWTUtil jwtUtil, RoleMapper roleMapper) {
+        this.userMapper = userMapper;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+        this.roleMapper = roleMapper;
+    }
 
 
     /**

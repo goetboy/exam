@@ -16,14 +16,24 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
+/**
+ * @author goetb
+ */
 @Service
 public class RoleService extends AbstractService<Role> {
-    @Autowired
+    private final
     RoleMapper roleMapper;
-    @Autowired
+    private final
     UserRoleMapper userRoleMapper;
-    @Autowired
+    private final
     RoleMenuMapper roleMenuMapper;
+
+    @Autowired
+    public RoleService(RoleMapper roleMapper, UserRoleMapper userRoleMapper, RoleMenuMapper roleMenuMapper) {
+        this.roleMapper = roleMapper;
+        this.userRoleMapper = userRoleMapper;
+        this.roleMenuMapper = roleMenuMapper;
+    }
 
     public Role get(Integer id) {
         return roleMapper.selectByPrimaryKey(id);

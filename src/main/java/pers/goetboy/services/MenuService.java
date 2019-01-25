@@ -14,15 +14,21 @@ import java.util.List;
 
 /**
  * 菜单业务层
+ *
+ * @author goetb
  */
 @Service
 public class MenuService extends AbstractService<Menu> {
+    private final MenuMapper menuMapper;
+    private final RoleMenuMapper roleMenuMapper;
+    private final RoleMapper roleMapper;
+
     @Autowired
-    MenuMapper menuMapper;
-    @Autowired
-    RoleMenuMapper roleMenuMapper;
-    @Autowired
-    RoleMapper roleMapper;
+    public MenuService(MenuMapper menuMapper, RoleMenuMapper roleMenuMapper, RoleMapper roleMapper) {
+        this.menuMapper = menuMapper;
+        this.roleMenuMapper = roleMenuMapper;
+        this.roleMapper = roleMapper;
+    }
 
     public Menu get(Integer id) {
         return menuMapper.selectByPrimaryKey(id);
@@ -46,7 +52,7 @@ public class MenuService extends AbstractService<Menu> {
      */
     public Integer saveMenu(Menu menu) {
         menu.setState(1);
-        return  menuMapper.insertSelective(menu);
+        return menuMapper.insertSelective(menu);
     }
 
     /**

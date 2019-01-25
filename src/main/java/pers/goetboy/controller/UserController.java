@@ -10,6 +10,9 @@ import pers.goetboy.services.UserService;
 
 import java.util.List;
 
+/**
+ * @author goetb
+ */
 @RestController()
 @RequestMapping("/user")
 public class UserController extends AbstractController {

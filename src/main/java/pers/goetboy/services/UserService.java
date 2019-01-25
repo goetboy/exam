@@ -3,9 +3,6 @@ package pers.goetboy.services;
 import com.goetboy.core.exception.service.BaseServiceTipsMsgException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pers.goetboy.entity.STATE_ENUM;
 import pers.goetboy.entity.sys.Role;
@@ -18,11 +15,13 @@ import pers.goetboy.mapper.UserRoleMapper;
 import java.util.List;
 
 /**
+ * 用户业务类
+ *
  * @author goetb
  * @date 2018年12月6日 11点08分
  */
-@Service("jwtUserDetail")
-public class UserService implements UserDetailsService {
+@Service
+public class UserService {
     @Autowired
     private UserMapper userMapper;
     @Autowired
@@ -46,9 +45,7 @@ public class UserService implements UserDetailsService {
         if (CollectionUtils.isEmpty(users)) {
             return null;
         }
-        users.forEach(user -> {
-            user.setRoles(roleMapper.selectByUserId(user.getId()));
-        });
+        users.forEach(user -> user.setRoles(roleMapper.selectByUserId(user.getId())));
         return users;
     }
 
@@ -82,19 +79,15 @@ public class UserService implements UserDetailsService {
         List<Role> oldRoles = roleMapper.selectByUserId(userId);
         //过滤已有角色信息
         if (CollectionUtils.isNotEmpty(oldRoles) && CollectionUtils.isNotEmpty(roles)) {
-            roles.forEach(role -> {
-                oldRoles.forEach(oldRole -> {
-                    if (oldRole.getId().equals(role.getId())) {
-                        oldRoles.remove(role);
-                    }
-                });
-            });
+            roles.forEach(role -> oldRoles.forEach(oldRole -> {
+                if (oldRole.getId().equals(role.getId())) {
+                    oldRoles.remove(role);
+                }
+            }));
         }
         //删除不在存在的角色信息
         if (CollectionUtils.isNotEmpty(oldRoles)) {
-            oldRoles.forEach(role -> {
-                roleUserMapper.deleteByUserIdAndRoleId(userId, role.getId());
-            });
+            oldRoles.forEach(role -> roleUserMapper.deleteByUserIdAndRoleId(userId, role.getId()));
         }
         //添加新的角色信息
         if (CollectionUtils.isNotEmpty(roles)) {
@@ -140,25 +133,4 @@ public class UserService implements UserDetailsService {
         userMapper.updateByPrimaryKeySelective(user);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userMapper.selectByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
-        } else {
-            user.setRoles(loadUserRoles(user.getId()));
-            
-            return user;
-        }
-    }
-
-    public List<Role> loadUserRoles(Integer userId) {
-        List<Role> roles = roleMapper.selectByUserId(userId);
-        if (roles == null || roles.isEmpty()) {
-            return null;
-        } else {
-            return roles;
-        }
-
-    }
 }
