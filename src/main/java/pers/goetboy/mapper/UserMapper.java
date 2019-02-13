@@ -1,19 +1,16 @@
 package pers.goetboy.mapper;
 
-import org.apache.ibatis.annotations.*;
-import org.apache.ibatis.jdbc.SQL;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 import pers.goetboy.entity.sys.User;
-import tk.mybatis.mapper.common.Mapper;
-
-import java.util.List;
 
 /**
  * 用户管理mapper
  * @author goetb
  */
 @Repository
-public interface UserMapper extends Mapper<User> {
+public interface UserMapper extends BaseMapper<User> {
     String TABLE_NAME = User.TABLE_NAME;
 
     /**

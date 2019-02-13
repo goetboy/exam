@@ -1,9 +1,12 @@
 package pers.goetboy.controller;
 
-import com.goetboy.core.exception.service.BaseServiceTipsMsgException;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pers.goetboy.common.AbstractController;
+import pers.goetboy.common.exception.service.ServiceTipsException;
 import pers.goetboy.entity.sys.Role;
 import pers.goetboy.entity.sys.User;
 import pers.goetboy.services.UserService;
@@ -16,25 +19,30 @@ import java.util.List;
 @RestController()
 @RequestMapping("/user")
 public class UserController extends AbstractController {
-    @Autowired
+    private final
     UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * 获取用户列表
      */
     @GetMapping("/list")
-    public List<User> list() {
-        return userService.listUser();
+    public IPage<User> list(Integer current, Integer size) {
+        return userService.page(new Page(current, size));
     }
 
     /**
      * 获取用户信息
      *
-     * @param userId
-     * @return
+     * @param userId 用户id
+     * @return 用户信息
      */
     @GetMapping(value = "/get")
-    public User get(Integer userId) {
+    public User get(Long userId) {
         return userService.get(userId);
     }
 
@@ -46,8 +54,8 @@ public class UserController extends AbstractController {
      * @param param 使用 {@link UserParam#user}用户信息
      */
     @PostMapping(value = "/update")
-    public void update(@RequestBody UserParam param) throws BaseServiceTipsMsgException {
-        userService.updateUser(param.getUser());
+    public void update(@RequestBody UserParam param) throws ServiceTipsException {
+        userService.update(param.getUser());
     }
 
     /**
@@ -57,7 +65,7 @@ public class UserController extends AbstractController {
      */
     @PostMapping(value = "/delete")
     public void delete(@RequestBody UserParam param) {
-        userService.deleteUser(param.getUserId());
+        userService.delete(param.getUserId());
     }
 
     /**
@@ -74,11 +82,11 @@ public class UserController extends AbstractController {
      * 更新用户状态
      *
      * @param param 用户id {@link UserParam#userId} 用户id{@link UserParam#state } 用户状态 0停用 1正常
-     * @throws BaseServiceTipsMsgException
+     * @throws ServiceTipsException 业务异常
      */
     @PostMapping(value = "/update/state")
-    public void updateUserState(@RequestBody UserParam param) throws BaseServiceTipsMsgException {
-        userService.updateUserState(param.getUserId(), param.getState());
+    public void updateUserState(@RequestBody UserParam param) throws ServiceTipsException {
+        userService.updateState(param.getUserId(), param.getState());
     }
 
 
@@ -89,7 +97,7 @@ class UserParam {
     /**
      * 用户id
      */
-    private Integer userId;
+    private Long userId;
     /**
      * 用户状态
      */

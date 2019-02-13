@@ -1,5 +1,6 @@
 package pers.goetboy.security;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import pers.goetboy.entity.sys.Menu;
 import pers.goetboy.entity.sys.Role;
 import pers.goetboy.mapper.MenuMapper;
 import pers.goetboy.mapper.RoleMapper;
-import tk.mybatis.mapper.entity.Example;
 
 import java.util.Collection;
 import java.util.List;
@@ -50,21 +50,23 @@ public class MyFilterInvocationSecurityMetadataSource implements FilterInvocatio
                 return SecurityConfig.createList(roleStr.append("Role").toString());
             }
         }
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         //校验角色权限
         SecurityContextHolder.getContext().getAuthentication().getAuthorities().forEach(authority ->
         {
             //获取角色信息
-            Example example = new Example(Role.class);
 
-            example.createCriteria().andEqualTo("name", authority.getAuthority()).andEqualTo("state", STATE_ENUM.NORMAL.getValue());
-            Role role = roleMapper.selectOneByExample(example);
 
-            List<Menu> menus = menuMapper.selectByRoleId(role.getId());
+            Role role = roleMapper.selectOne(Wrappers.<Role>lambdaQuery().eq(Role::getState, STATE_ENUM.NORMAL.getValue()).eq(Role::getName, authority.getAuthority()));
+            if (role != null) {
+                List<Menu> menus = menuMapper.selectByRoleId(role.getId());
 
-            if (CollectionUtils.isNotEmpty(menus)) {
-                Optional<Menu> menuOptional = menus.stream().filter(menu -> antPathMatcher.matchStart(menu.getUrl(), url)).findFirst();
-                if (menuOptional.isPresent()) {
-                    roleStr.append("," + authority.getAuthority());
+                if (CollectionUtils.isNotEmpty(menus)) {
+
+                   Optional<Menu> optionalMenu = menus.stream().filter(menu -> antPathMatcher.matchStart(menu.getUrl(), url)).findFirst();
+                    if (optionalMenu.isPresent()) {
+                        roleStr.append("," + authority.getAuthority());
+                    }
                 }
             }
         });

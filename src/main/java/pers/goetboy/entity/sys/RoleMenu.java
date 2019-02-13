@@ -1,36 +1,37 @@
 package pers.goetboy.entity.sys;
 
-import lombok.Data;
+import com.baomidou.mybatisplus.annotation.KeySequence;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import pers.goetboy.entity.AbstractEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
  * 角色用户映射表
+ * @author goetb
  */
-@Entity
-@Table(name = RoleMenu.TABLE_NAME)
+@TableName(value = RoleMenu.TABLE_NAME)
 @Getter
 @Setter
 @ToString(callSuper = true)
+@KeySequence(RoleMenu.TABLE_NAME+RoleMenu.SEQ_SUFFIX)
+
 public class RoleMenu extends AbstractEntity implements Serializable {
     public final static String TABLE_NAME = "sys_role_menu";
     /**
      * 角色id
      */
-    @Column(name = "role_id")
-    private Integer roleId;
+    @TableField( "role_id")
+    private Long roleId;
     /**
      * 菜单id
      */
-    @Column(name = "menu_id")
-    private Integer menuId;
+    @TableField( "menu_id")
+    private Long menuId;
 
 
 }

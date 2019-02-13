@@ -1,12 +1,13 @@
 package pers.goetboy.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.KeySequence;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
@@ -14,48 +15,46 @@ import java.util.Date;
 /**
  * 实体顶级属性
  */
-@Entity
 @Getter
 @Setter
 @ToString(callSuper = true)
 public class AbstractEntity implements Serializable {
-    @Id
-    @Column(name = "id")
-    //@GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    public    static  final  String SEQ_SUFFIX ="_seq";
+    @TableId(type = IdType.INPUT)
+    private Long id;
     /**
      * 创造者
      */
     //@NotNull(message = "{table.createUser.notnull}")
     //@Max(value = 10,message = "{table.createUser.max}")
-    @Column(name = "CREATED_USER")
-    private Integer createdUser;
+    @TableField("CREATED_USER")
+    private Long createdUser;
     /**
      * 创建时间
      */
-    @Column(name = "CREATED_TIME")
+    @TableField("CREATED_TIME")
     private Date createdTime;
     /**
      * 更新时间
      */
-    @Column(name = "UPDATED_TIME")
+    @TableField("UPDATED_TIME")
     private Date updatedTime;
     /**
      * 更新人
      */
-    @Column(name = "UPDATED_USER")
-    private Integer updatedUser;
+    @TableField("UPDATED_USER")
+    private Long updatedUser;
 
     /**
      * 描述
      */
-    @Column(name = "remark")
+    @TableField("remark")
     private String remark;
     /**
      * 状态
      */
     @Pattern(regexp = "$[0-1]{1}^", message = "状态 0停用|1异常")
-    @Column(name = "state")
+    @TableField("state")
     private Integer state;
 
 }

@@ -1,6 +1,6 @@
 package pers.goetboy.security;
 
-import com.goetboy.core.util.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
@@ -24,7 +24,7 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
         for (ConfigAttribute ca : configAttributes) {
 
             String needRole = ca.getAttribute();
-            if (StringUtil.isNotBlank(needRole)) {
+            if (StringUtils.isNotBlank(needRole)) {
                 return;
             }
 

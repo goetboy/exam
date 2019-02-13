@@ -1,19 +1,27 @@
 package pers.goetboy.controller;
 
-import com.goetboy.core.exception.service.BaseServiceTipsMsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
+import pers.goetboy.common.AbstractController;
+import pers.goetboy.common.exception.service.ServiceTipsException;
 import pers.goetboy.entity.sys.User;
 import pers.goetboy.services.LoginRepository;
 
+/**
+ * @author goetb
+ */
 @RestController
 @RequestMapping("/")
 @ResponseBody
-public class LoginController {
+public class LoginController extends AbstractController {
+
+    private final LoginRepository loginRepository;
 
     @Autowired
-    private LoginRepository loginRepository;
+    public LoginController(LoginRepository loginRepository) {
+        this.loginRepository = loginRepository;
+    }
 
     /**
      * 用户登录
@@ -46,7 +54,7 @@ public class LoginController {
      * @throws AuthenticationException 错误信息
      */
     @PostMapping(value = "/register")
-    public void register(@RequestBody User user) throws BaseServiceTipsMsgException {
+    public void register(@RequestBody User user) throws ServiceTipsException {
         loginRepository.register(user);
     }
 

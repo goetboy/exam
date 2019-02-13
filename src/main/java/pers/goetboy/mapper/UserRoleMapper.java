@@ -1,27 +1,26 @@
 package pers.goetboy.mapper;
 
-import org.apache.ibatis.annotations.*;
-import org.apache.ibatis.jdbc.SQL;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.stereotype.Repository;
-import pers.goetboy.entity.sys.Role;
-import pers.goetboy.entity.sys.User;
 import pers.goetboy.entity.sys.UserRole;
-import tk.mybatis.mapper.common.Mapper;
 
-import java.util.List;
-
+/**
+ * 用户角色信息mapper
+ *
+ * @author goetb
+ */
 @Repository
-public interface UserRoleMapper extends Mapper<UserRole> {
-
+public interface UserRoleMapper extends BaseMapper<UserRole> {
 
 
     /**
      * 通过角色id删除用户角色映射信息
      *
-     * @param roleId
+     * @param roleId 角色id
      */
     @Delete("delete " + UserRole.TABLE_NAME + " where role_id = #{roleId} ")
-    void deleteByRoleId(Integer roleId);
+    void deleteByRoleId(Long roleId);
 
     /**
      * 通过用户id删除用户角色映射信息
@@ -29,15 +28,16 @@ public interface UserRoleMapper extends Mapper<UserRole> {
      * @param userId
      */
     @Delete("delete " + UserRole.TABLE_NAME + " where user_id = #{userId}")
-    void deleteByUserId(Integer userId);
+    void deleteByUserId(Long userId);
 
     /**
      * 通过用户id删除用户角色映射信息
      *
-     * @param userId
+     * @param userId 用户id
+     * @param roleId 角色id
      */
-    @Delete("delete " + UserRole.TABLE_NAME + " where user_id =#{0} and role_id =#{1}")
-    void deleteByUserIdAndRoleId(Integer userId, Integer roleId);
+    @Delete("delete " + UserRole.TABLE_NAME + " where user_id =#{userId} and role_id =#{roleId}")
+    void deleteByUserIdAndRoleId(Long userId, Long roleId);
 
 
 }

@@ -1,9 +1,11 @@
 package pers.goetboy.services;
 
-import com.goetboy.core.exception.service.BaseServiceTipsMsgException;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pers.goetboy.common.AbstractService;
+import pers.goetboy.common.exception.service.ServiceTipsException;
 import pers.goetboy.entity.STATE_ENUM;
 import pers.goetboy.entity.sys.Role;
 import pers.goetboy.entity.sys.User;
@@ -21,32 +23,31 @@ import java.util.List;
  * @date 2018年12月6日 11点08分
  */
 @Service
-public class UserService {
-    @Autowired
-    private UserMapper userMapper;
-    @Autowired
-    private UserRoleMapper roleUserMapper;
-    @Autowired
-    private RoleMapper roleMapper;
+public class UserService extends AbstractService<User> {
+    private final UserMapper userMapper;
+    private final UserRoleMapper roleUserMapper;
+    private final RoleMapper roleMapper;
 
-    public User get(Integer id) {
-        return userMapper.selectByPrimaryKey(id);
+    @Autowired
+    public UserService(UserMapper userMapper, UserRoleMapper roleUserMapper, RoleMapper roleMapper) {
+        this.userMapper = userMapper;
+        super.baseMapper = userMapper;
+        this.roleUserMapper = roleUserMapper;
+        this.roleMapper = roleMapper;
     }
 
-    public Integer saveUser(User user) {
-        return userMapper.insertSelective(user);
-    }
 
     /**
      * 获取用户列表
      */
-    public List<User> listUser() {
-        List<User> users = userMapper.selectAll();
-        if (CollectionUtils.isEmpty(users)) {
+    @Override
+    public IPage<User> page(IPage page) {
+        IPage<User> result = userMapper.selectPage(page, null);
+        if (CollectionUtils.isEmpty(result.getRecords())) {
             return null;
         }
-        users.forEach(user -> user.setRoles(roleMapper.selectByUserId(user.getId())));
-        return users;
+        result.getRecords().forEach(user -> user.setRoles(roleMapper.selectByUserId(user.getId())));
+        return result;
     }
 
     /**
@@ -55,17 +56,18 @@ public class UserService {
      * @param user 用户信息
      */
 
-    public void updateUser(User user) throws BaseServiceTipsMsgException {
-        User oldUser = userMapper.selectByPrimaryKey(user.getId());
+    @Override
+    public void update(User user) throws ServiceTipsException {
+        User oldUser = userMapper.selectById(user.getId());
         if (oldUser == null) {
-            throw new BaseServiceTipsMsgException("用户未找到");
+            throw new ServiceTipsException("用户未找到");
         }
         oldUser.setNickName(user.getNickName());
         oldUser.setEmail(user.getEmail());
         oldUser.setAddress(user.getAddress());
         oldUser.setRemark(user.getRemark());
         oldUser.setState(user.getState());
-        userMapper.updateByPrimaryKeySelective(oldUser);
+        userMapper.updateById(oldUser);
     }
 
     /**
@@ -74,7 +76,7 @@ public class UserService {
      * @param userId 用户id
      * @param roles  角色信息
      */
-    public void updateUserRole(Integer userId, List<Role> roles) {
+    public void updateUserRole(Long userId, List<Role> roles) {
 
         List<Role> oldRoles = roleMapper.selectByUserId(userId);
         //过滤已有角色信息
@@ -96,7 +98,7 @@ public class UserService {
                 userRole.setUserId(userId);
                 userRole.setRoleId(role.getId());
                 userRole.setUserId(userId);
-                roleUserMapper.insertSelective(userRole);
+                roleUserMapper.insert(userRole);
             });
 
         }
@@ -108,29 +110,13 @@ public class UserService {
      *
      * @param id 用户id
      */
-    public void deleteUser(Integer id) {
+    @Override
+    public void delete(Long id) {
         //删除用户信息
-        userMapper.deleteByPrimaryKey(id);
+        userMapper.deleteById(id);
         //删除角色信息
         roleUserMapper.deleteByUserId(id);
     }
 
-    public void updateUserState(Integer userId, Integer state) throws BaseServiceTipsMsgException {
-        //如果传入状态不正确
-        if (state == null || STATE_ENUM.getByValue(state) == null) {
-            throw new BaseServiceTipsMsgException("用户状态不正确");
-        }
-        User user = userMapper.selectByPrimaryKey(userId);
-        //如果用户没找到
-        if (user == null) {
-            throw new BaseServiceTipsMsgException("用户未找到");
-        }
-        //如果状态相等,不执行更新
-        if (user.getState().equals(state)) {
-            return;
-        }
-        user.setState(state);
-        userMapper.updateByPrimaryKeySelective(user);
-    }
 
 }

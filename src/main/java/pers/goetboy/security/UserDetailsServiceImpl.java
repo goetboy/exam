@@ -40,7 +40,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
     }
 
-    private List<Role> loadUserRoles(Integer userId) {
+    private List<Role> loadUserRoles(Long userId) {
         List<Role> roles = roleMapper.selectByUserId(userId);
         if (roles == null || roles.isEmpty()) {
             return null;

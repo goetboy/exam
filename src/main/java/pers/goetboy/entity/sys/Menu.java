@@ -1,59 +1,62 @@
 package pers.goetboy.entity.sys;
 
-import lombok.Data;
+import com.baomidou.mybatisplus.annotation.KeySequence;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import pers.goetboy.entity.AbstractEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * 菜单表
+ *
+ * @author goetb
  */
-@Entity
-@Table(name = Menu.TABLE_NAME)
+@TableName(value = Menu.TABLE_NAME)
 @Getter
 @Setter
 @ToString(callSuper = true)
+@KeySequence(value = Menu.TABLE_NAME + Menu.SEQ_SUFFIX, clazz = Long.class)
+
 public class Menu extends AbstractEntity implements Serializable {
     public final static String TABLE_NAME = "sys_menu";
     /**
      * 角色名
      */
     @NotNull(message = "{menu.name.notnull}")
-    @Size(max = 20,message = "{menu.name.size}")
-    @Column(name = "name")
+    @Size(max = 20, message = "{menu.name.size}")
+    @TableField("name")
     private String name;
     /**
      * 菜单地址
      */
-    @Column(name = "url")
+    @TableField("url")
     private String url;
     /**
      * 菜单类型
      */
-    @Column(name = "type")
+    @TableField("type")
     private Integer type;
     /**
      * 父菜单id
      */
-    @Column(name = "parent_id")
-    private Integer parentId;
+    @TableField("parent_id")
+    private Long parentId;
     /**
      * 排序
      */
-    @Column(name = "sort")
+    @TableField("sort")
     private Integer sort;
-    @Transient
+    /**
+     * 角色列表
+     */
+    @TableField(exist = false)
     private List<Role> roles;
 
 }

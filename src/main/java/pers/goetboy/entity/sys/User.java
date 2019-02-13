@@ -1,5 +1,8 @@
 package pers.goetboy.entity.sys;
 
+import com.baomidou.mybatisplus.annotation.KeySequence;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,10 +12,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pers.goetboy.entity.AbstractEntity;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,43 +19,44 @@ import java.util.List;
 
 /**
  * 用户表
+ * @author goetb
  */
-@Entity
-@Table(name = User.TABLE_NAME)
+@TableName(value = User.TABLE_NAME)
 @Getter
 @Setter
 @ToString(callSuper = true)
+@KeySequence(User.TABLE_NAME+User.SEQ_SUFFIX)
 public class User extends AbstractEntity implements UserDetails {
     public final static String TABLE_NAME = "sys_user";
     /**
      * 用户名
      */
-    @Column(name = "userName")
+    @TableField( "userName")
     private String username;
     /**
      * 昵称
      */
-    @Column(name = "nickName")
+    @TableField( "nickName")
     private String nickName;
     /**
      * 密码
      */
-    @Column(name = "password")
+    @TableField( "password")
     private String password;
-    @Column(name = "name")
+    @TableField( "name")
     private String name;
-    @Column(name = "phone")
+    @TableField( "phone")
     private String phone;
-    @Column(name = "address")
+    @TableField( "address")
     private String address;
-    @Column(name = "email")
+    @TableField( "email")
     private String email;
-    @Transient
+    @TableField(exist = false)
     private List<Role> roles;
     /**
      * 用户菜单权限
      */
-    @Transient
+    @TableField(exist = false )
     private List<Menu> menus;
 
     public User() {
@@ -68,7 +68,7 @@ public class User extends AbstractEntity implements UserDetails {
         this.password = password;
     }
 
-    public User(Integer id, String username, String password) {
+    public User(Long id, String username, String password) {
         super.setId(id);
         this.username = username;
         this.password = password;

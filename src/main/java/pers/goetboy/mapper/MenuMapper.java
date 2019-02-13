@@ -1,11 +1,11 @@
 package pers.goetboy.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 import pers.goetboy.entity.sys.Menu;
 import pers.goetboy.entity.sys.RoleMenu;
 import pers.goetboy.entity.sys.UserRole;
-import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
  * @author goetb
  */
 @Repository
-public interface MenuMapper extends Mapper<Menu> {
+public interface MenuMapper extends BaseMapper<Menu> {
     /**
      * 通过角色id查询菜单权限
      *
@@ -23,7 +23,7 @@ public interface MenuMapper extends Mapper<Menu> {
      * @return 菜单列表
      */
     @Select("select sm.* from " + RoleMenu.TABLE_NAME + " srm," + Menu.TABLE_NAME + " sm where srm.menu_id=sm.id(+) and srm.role_id=#{roleId}")
-    public List<Menu> selectByRoleId(Integer roleId);
+    List<Menu> selectByRoleId(Long roleId);
 
     /**
      * 通过用户id查询菜单权限
@@ -32,5 +32,5 @@ public interface MenuMapper extends Mapper<Menu> {
      * @return 菜单列表
      */
     @Select("select sm.* from " + RoleMenu.TABLE_NAME + " srm," + UserRole.TABLE_NAME + " sur," + Menu.TABLE_NAME + " sm where srm.menu_id=sm.id(+) and  srm.role_id=sur.role_id and sur.user_id=#{userId}")
-    public List<Menu> selectByUseId(Integer userId);
+    List<Menu> selectByUseId(Long userId);
 }

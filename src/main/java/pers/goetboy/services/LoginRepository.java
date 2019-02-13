@@ -1,6 +1,5 @@
 package pers.goetboy.services;
 
-import com.goetboy.core.exception.service.BaseServiceTipsMsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -8,32 +7,33 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import pers.goetboy.common.exception.service.ServiceTipsException;
 import pers.goetboy.entity.sys.User;
-import pers.goetboy.mapper.RoleMapper;
 import pers.goetboy.mapper.UserMapper;
 import pers.goetboy.security.JWTUtil;
 
 /**
- * @author:goetboy;
+ * 登陆业务类
+ *
+ * @author:goetboy
  * @date 2018 /12 /06
  **/
 @Service
+
 public class LoginRepository {
-    final
+    private final
     UserMapper userMapper;
-    final
+    private final
     AuthenticationManager authenticationManager;
-    final
+    private final
     JWTUtil jwtUtil;
-    final
-    RoleMapper roleMapper;
 
     @Autowired
-    public LoginRepository(UserMapper userMapper, AuthenticationManager authenticationManager, JWTUtil jwtUtil, RoleMapper roleMapper) {
+    public LoginRepository(UserMapper userMapper, AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
         this.userMapper = userMapper;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
-        this.roleMapper = roleMapper;
+
     }
 
 
@@ -49,22 +49,20 @@ public class LoginRepository {
         UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
         Authentication authentication = authenticationManager.authenticate(upToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtUtil.generateToken((User) authentication.getPrincipal());
-        return token;
+        return jwtUtil.generateToken((User) authentication.getPrincipal());
     }
 
     /**
      * 注册用户
      *
-     * @param user
-     * @return
+     * @param user 用户信息
      */
-    public void register(User user) throws BaseServiceTipsMsgException {
+    public void register(User user) throws ServiceTipsException {
         String username = user.getUsername();
         if (userMapper.selectByUsername(username) != null) {
-            throw new BaseServiceTipsMsgException("用户已存在");
+            throw new ServiceTipsException("用户已存在");
         }
-        userMapper.insertSelective(encodePassword(user));
+        userMapper.insert(encodePassword(user));
     }
 
     /**
@@ -77,8 +75,8 @@ public class LoginRepository {
     /**
      * 刷新token
      *
-     * @param oldToken
-     * @return
+     * @param oldToken 旧token
+     * @return 新token
      */
     public String refreshToken(String oldToken) {
         String token = oldToken.substring(jwtUtil.getJwtConfig().getHeader().length());
@@ -92,10 +90,10 @@ public class LoginRepository {
     /**
      * 加密用户密码
      *
-     * @param password
+     * @param password 密码
      */
     private String encodePassword(String password) {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
         return bCryptPasswordEncoder.encode(password);
     }
@@ -103,11 +101,10 @@ public class LoginRepository {
     /**
      * 加密用户密码
      *
-     * @param user
+     * @param user 用户
      */
     private User encodePassword(User user) {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setPassword(encodePassword(user.getPassword()));
         return user;
     }
 

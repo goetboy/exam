@@ -1,22 +1,16 @@
 package pers.goetboy.services;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.ToString;
-import org.apache.commons.codec.Decoder;
-import org.apache.commons.codec.digest.Md5Crypt;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.codec.Hex;
 import pers.goetboy.BaseTest;
 import pers.goetboy.entity.sys.User;
 
-import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 
 @EnableAutoConfiguration
 public class UserServiceTest extends BaseTest {
@@ -25,7 +19,7 @@ public class UserServiceTest extends BaseTest {
 
     @Test
     public void testGet() {
-        User user = userService.get(1);
+        User user = userService.get(1L);
         System.out.println(user);
     }
 
@@ -34,32 +28,32 @@ public class UserServiceTest extends BaseTest {
         User user = new User();
         user.setUsername("admin");
         user.setPassword("123456");
-        user.setCreatedUser(1);
+        user.setCreatedUser(1L);
         user.setState(1);
         user.setCreatedTime(new Date());
         user.setRemark("测试");
         userService.saveUser(user);
-        userService.listUser().forEach(user1 -> System.out.println(user1));
+        userService.listUser(new Page(1, Integer.MAX_VALUE)).getRecords().forEach(System.out::println);
     }
 
     @Test
     public void testUpdate() {
         User user = new User();
-        user.setId(3);
+        user.setId(3L);
         user.setUsername("test1");
         user.setPassword("test");
         user.setState(1);
         user.setCreatedTime(new Date());
 
         //  userService.updateUser(user);
-        User user1 = userService.get(3);
+        User user1 = userService.get(3L);
         System.out.println(user1);
     }
 
     @Test
     public void testDelete() {
-        userService.deleteUser(2);
-        User user1 = userService.get(2);
+        userService.deleteUser(2L);
+        User user1 = userService.get(2L);
         System.out.println(user1);
     }
 
@@ -70,12 +64,13 @@ public class UserServiceTest extends BaseTest {
 
     @Test
     public void testList() {
-        List<User> users = userService.listUser();
-        users.forEach(user -> System.out.println(user));
+        IPage<User> userIPage = userService.listUser(new Page(1, Integer.MAX_VALUE));
+        userIPage.getRecords().forEach(System.out::println);
         ObjectMapper objectMapper = new ObjectMapper();
-        users.forEach(user -> {
+
+        userIPage.getRecords().forEach(user -> {
             try {
-                System.out.println(   objectMapper.writeValueAsString(user));
+                System.out.println(objectMapper.writeValueAsString(user));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
