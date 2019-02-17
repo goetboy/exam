@@ -18,11 +18,14 @@ import java.util.Arrays;
 @Aspect
 @Log4j2
 public class ServiceAdvice {
-
-    @Pointcut("execution(* pers.goetboy.common.AbstractService+.*(..))")
+/*
+    @Pointcut("execution(* pers.goetboy.services.*(..))")
     public void serviceAop() {
+    }*/
+    @Pointcut("target(pers.goetboy.common.AbstractService)")
+    public void abstractServiceAop() {
     }
-    @Around("serviceAop()")
+    @Around("abstractServiceAop()")
     public Object print(ProceedingJoinPoint point) throws Throwable {
 
         String methodName = point.getSignature().getName();

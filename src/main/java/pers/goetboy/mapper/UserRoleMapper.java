@@ -36,7 +36,7 @@ public interface UserRoleMapper extends BaseMapper<UserRole> {
      * @param userId 用户id
      * @param roleId 角色id
      */
-    @Delete("delete " + UserRole.TABLE_NAME + " where user_id =#{userId} and role_id =#{roleId}")
+    @Delete("delete " + UserRole.TABLE_NAME + " where user_id =#{arg0} and role_id =#{arg0}")
     void deleteByUserIdAndRoleId(Long userId, Long roleId);
 
 

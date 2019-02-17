@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pers.goetboy.common.AbstractParam;
 import pers.goetboy.common.exception.service.ServiceTipsException;
+import pers.goetboy.entity.EntityState;
 import pers.goetboy.entity.sys.Menu;
 import pers.goetboy.entity.sys.Role;
 import pers.goetboy.services.RoleService;
@@ -54,7 +56,7 @@ public class RoleController {
      */
     @PostMapping(value = "/update")
     public void update(@RequestBody RoleParam param) throws ServiceTipsException {
-        roleService.update(param.getRole());
+        roleService.update(param.getEntity());
     }
 
     /**
@@ -64,7 +66,7 @@ public class RoleController {
      */
     @PostMapping(value = "/save")
     public void save(@RequestBody RoleParam param) throws ServiceTipsException {
-        roleService.save(param.getRole());
+        roleService.save(param.getEntity());
     }
 
     /**
@@ -74,7 +76,7 @@ public class RoleController {
      */
     @PostMapping(value = "/delete")
     public void delete(@RequestBody RoleParam param) {
-        roleService.delete(param.getRoleId());
+        roleService.delete(param.getId());
     }
 
     /**
@@ -84,7 +86,7 @@ public class RoleController {
      */
     @PostMapping(value = "/update/menu")
     public void updateRoleMenu(@RequestBody RoleParam param) throws ServiceTipsException {
-        roleService.updateRoleMenu(param.getRoleId(), param.getMenus());
+        roleService.updateRoleMenu(param.getId(), param.getMenus());
     }
 
     /**
@@ -95,28 +97,17 @@ public class RoleController {
      */
     @PostMapping(value = "/update/state")
     public void updateRoleState(@RequestBody RoleParam param) throws ServiceTipsException {
-        roleService.updateState(param.getRoleId(), param.getState());
+        roleService.updateState(param.getId(), EntityState.getByValue(param.getState()));
     }
 
 
 }
 
 @Data
-class RoleParam {
-    /**
-     * 角色id
-     */
-    private Long roleId;
-    /**
-     * 角色状态
-     */
-    private Integer state;
+class RoleParam extends AbstractParam<Role> {
     /**
      * 角色信息
      */
     private List<Menu> menus;
-    /**
-     * 角色信息
-     */
-    private Role role;
+
 }

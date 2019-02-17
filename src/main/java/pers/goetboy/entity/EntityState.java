@@ -3,21 +3,33 @@ package pers.goetboy.entity;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * 实体状态
  *
  * @author goetb
  */
-@Getter
-public enum STATE_ENUM {
+@ToString
+public enum EntityState {
+    /**
+     * 正常
+     */
     NORMAL(1),
+    /**
+     * 禁用
+     */
     DISABLE(0);
     @JsonValue
     private Integer value;
 
-    STATE_ENUM(Integer value) {
+    EntityState(Integer value) {
         this.value = value;
+    }
+
+    @JsonCreator
+    public Integer getValue() {
+        return value;
     }
 
     /**
@@ -25,9 +37,8 @@ public enum STATE_ENUM {
      *
      * @param value 参数值
      */
-    @JsonCreator
-    public static STATE_ENUM getByValue(Integer value) {
-        for (STATE_ENUM state : values()) {
+    public static EntityState getByValue(Integer value) {
+        for (EntityState state : values()) {
             if (state.getValue().equals(value)) {
                 return state;
             }
@@ -35,5 +46,6 @@ public enum STATE_ENUM {
 
         return null;
     }
+
 
 }

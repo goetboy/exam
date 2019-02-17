@@ -32,8 +32,8 @@ public class UserServiceTest extends BaseTest {
         user.setState(1);
         user.setCreatedTime(new Date());
         user.setRemark("测试");
-        userService.saveUser(user);
-        userService.listUser(new Page(1, Integer.MAX_VALUE)).getRecords().forEach(System.out::println);
+        userService.save(user);
+        userService.page(new Page(1, Integer.MAX_VALUE)).getRecords().forEach(System.out::println);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class UserServiceTest extends BaseTest {
 
     @Test
     public void testDelete() {
-        userService.deleteUser(2L);
+        userService.delete(2L);
         User user1 = userService.get(2L);
         System.out.println(user1);
     }
@@ -64,7 +64,7 @@ public class UserServiceTest extends BaseTest {
 
     @Test
     public void testList() {
-        IPage<User> userIPage = userService.listUser(new Page(1, Integer.MAX_VALUE));
+        IPage<User> userIPage = userService.page(new Page(1, Integer.MAX_VALUE));
         userIPage.getRecords().forEach(System.out::println);
         ObjectMapper objectMapper = new ObjectMapper();
 

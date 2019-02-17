@@ -18,7 +18,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString(callSuper = true)
-@KeySequence(RoleMenu.TABLE_NAME+RoleMenu.SEQ_SUFFIX)
+@KeySequence(value = RoleMenu.TABLE_NAME+RoleMenu.SEQ_SUFFIX,clazz = Long.class)
 
 public class RoleMenu extends AbstractEntity implements Serializable {
     public final static String TABLE_NAME = "sys_role_menu";

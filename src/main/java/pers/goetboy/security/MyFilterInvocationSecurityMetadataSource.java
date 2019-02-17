@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.util.AntPathMatcher;
-import pers.goetboy.entity.STATE_ENUM;
+import pers.goetboy.entity.EntityState;
 import pers.goetboy.entity.sys.Menu;
 import pers.goetboy.entity.sys.Role;
 import pers.goetboy.mapper.MenuMapper;
@@ -57,7 +57,7 @@ public class MyFilterInvocationSecurityMetadataSource implements FilterInvocatio
             //获取角色信息
 
 
-            Role role = roleMapper.selectOne(Wrappers.<Role>lambdaQuery().eq(Role::getState, STATE_ENUM.NORMAL.getValue()).eq(Role::getName, authority.getAuthority()));
+            Role role = roleMapper.selectOne(Wrappers.<Role>lambdaQuery().eq(Role::getState, EntityState.NORMAL.getValue()).eq(Role::getName, authority.getAuthority()));
             if (role != null) {
                 List<Menu> menus = menuMapper.selectByRoleId(role.getId());
 

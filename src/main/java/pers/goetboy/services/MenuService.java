@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pers.goetboy.common.AbstractService;
 import pers.goetboy.common.exception.service.ServiceTipsException;
-import pers.goetboy.entity.STATE_ENUM;
 import pers.goetboy.entity.sys.Menu;
 import pers.goetboy.mapper.MenuMapper;
 import pers.goetboy.mapper.RoleMenuMapper;
@@ -21,8 +20,8 @@ public class MenuService extends AbstractService<Menu> {
 
     @Autowired
     public MenuService(MenuMapper menuMapper, RoleMenuMapper roleMenuMapper) {
+        super(menuMapper);
         this.menuMapper = menuMapper;
-        super.baseMapper = menuMapper;
         this.roleMenuMapper = roleMenuMapper;
 
     }

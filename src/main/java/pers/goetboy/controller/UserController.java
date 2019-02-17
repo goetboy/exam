@@ -6,7 +6,9 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pers.goetboy.common.AbstractController;
+import pers.goetboy.common.AbstractParam;
 import pers.goetboy.common.exception.service.ServiceTipsException;
+import pers.goetboy.entity.EntityState;
 import pers.goetboy.entity.sys.Role;
 import pers.goetboy.entity.sys.User;
 import pers.goetboy.services.UserService;
@@ -51,53 +53,50 @@ public class UserController extends AbstractController {
      * 可更新 nickName 字段
      * 可更新 remark字段
      *
-     * @param param 使用 {@link UserParam#user}用户信息
+     * @param param 使用 {@link UserParam#getEntity()}}用户信息
      */
     @PostMapping(value = "/update")
     public void update(@RequestBody UserParam param) throws ServiceTipsException {
-        userService.update(param.getUser());
+        userService.update(param.getEntity());
     }
 
     /**
      * 删除用户信息
      *
-     * @param param 使用 {@link UserParam#userId} 用户id
+     * @param param 使用 {@link UserParam#id} 用户id
      */
     @PostMapping(value = "/delete")
     public void delete(@RequestBody UserParam param) {
-        userService.delete(param.getUserId());
+        userService.delete(param.getId());
     }
 
     /**
      * 更新用户角色信息
      *
-     * @param param 使用{@link UserParam#userId} 用户id {@link UserParam#roles}角色信息
+     * @param param 使用{@link UserParam#id} 用户id {@link UserParam#roles}角色信息
      */
     @PostMapping(value = "/update/role")
     public void updateUserRole(@RequestBody UserParam param) {
-        userService.updateUserRole(param.getUserId(), param.getRoles());
+        userService.updateUserRole(param.getId(), param.getRoles());
     }
 
     /**
      * 更新用户状态
      *
-     * @param param 用户id {@link UserParam#userId} 用户id{@link UserParam#state } 用户状态 0停用 1正常
+     * @param param 用户id {@link UserParam#id} 用户id{@link UserParam#state } 用户状态 0停用 1正常
      * @throws ServiceTipsException 业务异常
      */
     @PostMapping(value = "/update/state")
-    public void updateUserState(@RequestBody UserParam param) throws ServiceTipsException {
-        userService.updateState(param.getUserId(), param.getState());
+    public void updateState(@RequestBody UserParam param) throws ServiceTipsException {
+        userService.updateState(param.getId(), EntityState.getByValue(param.getState()));
     }
 
 
 }
 
 @Data
-class UserParam {
-    /**
-     * 用户id
-     */
-    private Long userId;
+class UserParam extends AbstractParam<User> {
+
     /**
      * 用户状态
      */
@@ -106,10 +105,4 @@ class UserParam {
      * 角色信息
      */
     private List<Role> roles;
-    /**
-     * 用户信息
-     */
-    private User user;
-
-
 }

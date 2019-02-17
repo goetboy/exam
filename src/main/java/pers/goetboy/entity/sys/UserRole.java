@@ -18,7 +18,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString(callSuper = true)
-@KeySequence(UserRole.TABLE_NAME+UserRole.SEQ_SUFFIX)
+@KeySequence(value = UserRole.TABLE_NAME+UserRole.SEQ_SUFFIX,clazz = Long.class)
 public class UserRole extends AbstractEntity implements Serializable {
     public final static String TABLE_NAME = "sys_user_role";
     /**

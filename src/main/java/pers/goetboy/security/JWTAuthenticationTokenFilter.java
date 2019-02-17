@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import pers.goetboy.common.exception.BaseException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -17,8 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Component
 @Log4j2
+@Component
 public class JWTAuthenticationTokenFilter extends OncePerRequestFilter {
 
     private UserDetailsService userDetailsService;
@@ -36,11 +37,12 @@ public class JWTAuthenticationTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-       log.info("登陆校验");
+        log.info("登陆校验");
         String authHeader = request.getHeader(jwtConfig.getHeader());
         if (authHeader != null && authHeader.startsWith(jwtConfig.getTokenHead())) {
             String authToken = authHeader.substring(jwtConfig.getTokenHead().length());
             String username = jwtTokenUtil.getUserAccountFromToken(authToken);
+
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
                 if (jwtTokenUtil.validateToken(authToken, userDetails)) {
@@ -49,6 +51,10 @@ public class JWTAuthenticationTokenFilter extends OncePerRequestFilter {
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
+            } else {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+
+                jwtTokenUtil.validateToken(authToken, userDetails);
             }
         }
         chain.doFilter(request, response);

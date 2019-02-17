@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pers.goetboy.common.AbstractService;
 import pers.goetboy.common.exception.service.ServiceTipsException;
-import pers.goetboy.entity.STATE_ENUM;
 import pers.goetboy.entity.sys.Menu;
 import pers.goetboy.entity.sys.Role;
 import pers.goetboy.entity.sys.RoleMenu;
@@ -31,14 +30,11 @@ public class RoleService extends AbstractService<Role> {
 
     @Autowired
     public RoleService(RoleMapper roleMapper, UserRoleMapper userRoleMapper, RoleMenuMapper roleMenuMapper) {
+        super(roleMapper);
         this.roleMapper = roleMapper;
-        super.baseMapper=roleMapper;
         this.userRoleMapper = userRoleMapper;
         this.roleMenuMapper = roleMenuMapper;
     }
-
-
-
 
 
     /**
@@ -72,7 +68,7 @@ public class RoleService extends AbstractService<Role> {
     /**
      * 更新角色信息
      *
-     * @param  role 角色
+     * @param role 角色
      */
 
     @Override

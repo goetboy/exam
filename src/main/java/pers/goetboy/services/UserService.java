@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pers.goetboy.common.AbstractService;
 import pers.goetboy.common.exception.service.ServiceTipsException;
-import pers.goetboy.entity.STATE_ENUM;
 import pers.goetboy.entity.sys.Role;
 import pers.goetboy.entity.sys.User;
 import pers.goetboy.entity.sys.UserRole;
@@ -30,8 +29,8 @@ public class UserService extends AbstractService<User> {
 
     @Autowired
     public UserService(UserMapper userMapper, UserRoleMapper roleUserMapper, RoleMapper roleMapper) {
+        super(userMapper);
         this.userMapper = userMapper;
-        super.baseMapper = userMapper;
         this.roleUserMapper = roleUserMapper;
         this.roleMapper = roleMapper;
     }
@@ -42,13 +41,14 @@ public class UserService extends AbstractService<User> {
      */
     @Override
     public IPage<User> page(IPage page) {
-        IPage<User> result = userMapper.selectPage(page, null);
+        IPage<User> result = baseMapper.selectPage(page, null);
         if (CollectionUtils.isEmpty(result.getRecords())) {
             return null;
         }
         result.getRecords().forEach(user -> user.setRoles(roleMapper.selectByUserId(user.getId())));
         return result;
     }
+
 
     /**
      * 更新用户信息和用户对应的角色信息

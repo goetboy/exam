@@ -19,8 +19,9 @@ import java.util.Date;
 @Setter
 @ToString(callSuper = true)
 public class AbstractEntity implements Serializable {
-    public    static  final  String SEQ_SUFFIX ="_seq";
+    public static final String SEQ_SUFFIX = "_seq";
     @TableId(type = IdType.INPUT)
+    @TableField(value = "id")
     private Long id;
     /**
      * 创造者

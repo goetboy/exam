@@ -25,7 +25,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString(callSuper = true)
-@KeySequence(User.TABLE_NAME+User.SEQ_SUFFIX)
+@KeySequence(value = User.TABLE_NAME+User.SEQ_SUFFIX,clazz = Long.class)
 public class User extends AbstractEntity implements UserDetails {
     public final static String TABLE_NAME = "sys_user";
     /**

@@ -6,7 +6,10 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pers.goetboy.common.AbstractController;
+import pers.goetboy.common.AbstractParam;
 import pers.goetboy.common.exception.service.ServiceTipsException;
+import pers.goetboy.entity.AbstractEntity;
+import pers.goetboy.entity.EntityState;
 import pers.goetboy.entity.sys.Menu;
 import pers.goetboy.services.MenuService;
 
@@ -54,11 +57,11 @@ public class MenuController extends AbstractController {
      */
     @PostMapping(value = "/update")
     public void update(@RequestBody MenuParam param) throws ServiceTipsException {
-        menuService.update(param.getMenu());
+        menuService.update(param.getEntity());
     }
     @PostMapping(value = "/save")
     public void save(@RequestBody MenuParam param) throws ServiceTipsException {
-        menuService.save(param.getMenu());
+        menuService.save(param.getEntity());
     }
 
     /**
@@ -68,7 +71,7 @@ public class MenuController extends AbstractController {
      */
     @PostMapping(value = "/delete")
     public void delete(@RequestBody MenuParam param) {
-        menuService.delete(param.getMenuId());
+        menuService.delete(param.getId());
     }
 
     /**
@@ -79,23 +82,11 @@ public class MenuController extends AbstractController {
      */
     @PostMapping(value = "/update/state")
     public void updateUserState(@RequestBody MenuParam param) throws ServiceTipsException {
-        menuService.updateState(param.getMenuId(), param.getState());
+        menuService.updateState(param.getId(), EntityState.getByValue(param.getState()));
     }
 }
 
 @Data
-class MenuParam {
-    /**
-     * 菜单id
-     */
-    private Long menuId;
-    /**
-     * 菜单状态
-     */
-    private Integer state;
+class MenuParam extends AbstractParam<Menu> {
 
-    /**
-     * 菜单信息
-     */
-    private Menu menu;
 }

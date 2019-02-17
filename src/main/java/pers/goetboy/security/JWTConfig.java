@@ -37,6 +37,4 @@ public class JWTConfig {
      */
     private String exceptUrl;
 
-
-
 }
