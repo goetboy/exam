@@ -56,6 +56,4 @@ public class MenuService extends AbstractService<Menu> {
         roleMenuMapper.deleteByMenuId(id);
         menuMapper.deleteById(id);
     }
-
-
 }

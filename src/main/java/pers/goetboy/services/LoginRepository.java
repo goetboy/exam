@@ -19,7 +19,6 @@ import pers.goetboy.security.JWTUtil;
  * @date 2018 /12 /06
  **/
 @Service
-
 public class LoginRepository {
     private final
     UserMapper userMapper;

@@ -4,6 +4,7 @@ import pers.goetboy.common.exception.BaseException;
 
 /**
  * 针对于dao层的异常抛出
+ * @author goetb
  */
 public class BaseDaoException extends BaseException {
 

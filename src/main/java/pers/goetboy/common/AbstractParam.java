@@ -5,6 +5,7 @@ import pers.goetboy.entity.AbstractEntity;
 
 /**
  * 抽象参数
+ * @author goetb
  */
 @Data
 public abstract class AbstractParam<T extends AbstractEntity> {

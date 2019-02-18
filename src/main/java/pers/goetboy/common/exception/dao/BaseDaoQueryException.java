@@ -2,6 +2,7 @@ package pers.goetboy.common.exception.dao;
 
 /**
  * dao层异常抛出的派生子类，主要抛出select异常
+ * @author goetb
  */
 public class BaseDaoQueryException extends BaseDaoException {
 

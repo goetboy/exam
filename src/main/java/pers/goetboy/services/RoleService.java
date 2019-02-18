@@ -40,8 +40,8 @@ public class RoleService extends AbstractService<Role> {
     /**
      * 保存角色信息
      *
-     * @param role
-     * @return id
+     * @param role 角色信息
+     * @return id 角色id
      * @throws ServiceTipsException 异常
      */
 
@@ -52,17 +52,17 @@ public class RoleService extends AbstractService<Role> {
             throw new ServiceTipsException("已经有同名角色存在");
         }
         role.setState(1);
-        Long id = Long.valueOf(roleMapper.insert(role));
+        roleMapper.insert(role);
         List<Menu> menus = role.getMenus();
         if (menus != null && !menus.isEmpty()) {
             for (Menu menu : menus) {
                 RoleMenu roleMenu = new RoleMenu();
                 roleMenu.setMenuId(menu.getId());
-                roleMenu.setRoleId(id);
+                roleMenu.setRoleId(role.getId());
                 roleMenuMapper.insert(roleMenu);
             }
         }
-        return id;
+        return role.getId();
     }
 
     /**
@@ -90,6 +90,9 @@ public class RoleService extends AbstractService<Role> {
 
     /**
      * 更新角色菜单
+     *
+     * @param roleId 角色id
+     * @param menus  菜单列表
      */
     public void updateRoleMenu(Long roleId, List<Menu> menus) throws ServiceTipsException {
         Role oldRole = roleMapper.selectById(roleId);
@@ -112,7 +115,7 @@ public class RoleService extends AbstractService<Role> {
     /**
      * 删除角色以及角色对应的用户角色映射和角色菜单映射
      *
-     * @param id
+     * @param id 角色id
      */
 
     @Override

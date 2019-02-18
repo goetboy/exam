@@ -1,19 +1,18 @@
 package pers.goetboy.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pers.goetboy.common.AbstractParam;
 import pers.goetboy.common.AbstractController;
+import pers.goetboy.common.Tree;
 import pers.goetboy.common.exception.service.ServiceTipsException;
 import pers.goetboy.entity.EntityState;
 import pers.goetboy.entity.sys.Group;
 import pers.goetboy.services.GroupService;
+
+import java.util.List;
 
 /**
  * 分组管理
@@ -23,20 +22,24 @@ import pers.goetboy.services.GroupService;
  **/
 @RestController("/group")
 public class GroupController extends AbstractController {
+    private final GroupService groupService;
+
     @Autowired
-    private GroupService groupService;
+    public GroupController(GroupService groupService) {
+        this.groupService = groupService;
+    }
 
     /**
      * 获取分组列表
      */
     @GetMapping("/list")
-    public IPage<Group> list( Integer current, Integer size) {
-        return groupService.page(new Page(current, size));
+    public Tree<Group> list(Long parentId) {
+        return groupService.listGroupTree(parentId);
     }
 
-    @GetMapping("/list/{id}")
-    public IPage<Group> listById(Integer current, Integer size) {
-        return groupService.page(new Page(current, size));
+    @GetMapping("/list/{parentId}")
+    public List<Group> listTreeByParentId(@PathVariable Long parentId) {
+        return groupService.listByParentId(parentId);
     }
 
     /**
@@ -66,7 +69,7 @@ public class GroupController extends AbstractController {
      * 存储分组信息
      *
      * @param param entity 分组对象
-     * @throws ServiceTipsException
+     * @throws ServiceTipsException 业务异常
      */
     @PostMapping(value = "/save")
     public void save(@RequestBody GroupParam param) throws ServiceTipsException {
@@ -94,6 +97,7 @@ public class GroupController extends AbstractController {
         groupService.updateState(param.getId(), EntityState.getByValue(param.getState()));
     }
 
+    @EqualsAndHashCode(callSuper = true)
     @Data
     class GroupParam extends AbstractParam<Group> {
 
