@@ -1,7 +1,6 @@
 package pers.goetboy.common;
 
 import lombok.Data;
-import pers.goetboy.entity.AbstractEntity;
 
 /**
  * 抽象参数

@@ -5,8 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.transaction.annotation.Transactional;
 import pers.goetboy.common.exception.service.ServiceTipsException;
-import pers.goetboy.entity.AbstractEntity;
-import pers.goetboy.entity.EntityState;
 
 /**
  * 业务层抽象类，需要对baseMapper进行初始化

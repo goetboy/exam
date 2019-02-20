@@ -19,7 +19,7 @@ import java.util.Arrays;
 @Log4j2
 public class ServiceAdvice {
 /*
-    @Pointcut("execution(* pers.goetboy.services.*(..))")
+    @Pointcut("execution(* pers.goetboy.*.services.*(..))")
     public void serviceAop() {
     }*/
     @Pointcut("target(pers.goetboy.common.AbstractService)")
