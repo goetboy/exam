@@ -41,7 +41,7 @@ public class UserService extends AbstractService<User> {
      * 获取用户列表
      */
     @Override
-    public IPage<User> page(IPage page) {
+    public IPage page(IPage page) {
         IPage<User> result = baseMapper.selectPage(page, null);
         if (CollectionUtils.isEmpty(result.getRecords())) {
             return null;

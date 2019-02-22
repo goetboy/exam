@@ -1,4 +1,4 @@
-package pers.goetboy.common.advice;
+package pers.goetboy.common;
 
 import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.ProceedingJoinPoint;

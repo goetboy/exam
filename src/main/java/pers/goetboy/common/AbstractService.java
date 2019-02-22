@@ -35,8 +35,8 @@ public abstract class AbstractService<T extends AbstractEntity> {
      * @param id id
      * @return 实体类
      */
-    public T get(Long id) {
-        return baseMapper.selectById(id);
+    public  T get(Long id) {
+        return  baseMapper.selectById(id);
     }
 
     /**
@@ -45,8 +45,8 @@ public abstract class AbstractService<T extends AbstractEntity> {
      * @param page 分页信息
      * @return 实体分页列表
      */
-    public IPage<T> page(IPage<T> page) {
-        return baseMapper.selectPage(page, Wrappers.<T>lambdaQuery().eq(T::getState, EntityState.NORMAL.getValue()));
+    public IPage page(IPage page) {
+        return baseMapper.selectPage(page, null);
     }
 
     /**
@@ -56,8 +56,8 @@ public abstract class AbstractService<T extends AbstractEntity> {
      */
     public Long save(T t) {
         baseMapper.insert(t);
-        if (t instanceof AbstractEntity) {
-            return ((AbstractEntity) t).getId();
+        if (t != null) {
+            return t.getId();
         } else {
             return null;
         }
@@ -80,8 +80,8 @@ public abstract class AbstractService<T extends AbstractEntity> {
      */
     public void updateState(Long id, EntityState state) {
         T entity = baseMapper.selectById(id);
-        if (entity instanceof AbstractEntity) {
-            ((AbstractEntity) entity).setState(state.getValue());
+        if (entity != null) {
+            entity.setState(state.getValue());
             baseMapper.updateById(entity);
         } else {
             throw new ServiceTipsException("无法更新此对象的状态");

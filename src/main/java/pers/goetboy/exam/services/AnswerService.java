@@ -7,7 +7,7 @@ import pers.goetboy.exam.mapper.AnswerMapper;
 import pers.goetboy.exam.model.entity.Answer;
 
 /**
- * 考生service
+ * 答案service
  *
  * @author:goetb
  * @date 2019 /02 /13

@@ -1,6 +1,7 @@
 package pers.goetboy.exam.model.entity;
 
 import com.baomidou.mybatisplus.annotation.KeySequence;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,7 @@ import lombok.ToString;
 import pers.goetboy.common.AbstractEntity;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 问题类
@@ -26,9 +28,16 @@ public class Question extends AbstractEntity implements Serializable {
     /**
      * 试题类型
      */
+    @TableField(value = "type")
     private Integer type;
     /**
      * 试题内容
      */
+    @TableField(value = "context")
     private String context;
+    /**
+     * 答案
+     */
+    @TableField(exist = false)
+    private List<Answer> answers;
 }

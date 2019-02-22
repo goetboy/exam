@@ -1,4 +1,4 @@
-package pers.goetboy.common.advice;
+package pers.goetboy.common;
 
 import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
@@ -17,8 +17,8 @@ import java.io.IOException;
  *
  * @author goetb
  */
-@ControllerAdvice
 @Log4j2
+@ControllerAdvice
 public class ExceptionAdvice {
 
     /**
